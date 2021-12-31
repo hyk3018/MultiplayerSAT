@@ -1,45 +1,49 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public class HelloWorldPlayer : NetworkBehaviour
+namespace HelloWorld
 {
-    public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
-
-    public override void OnNetworkSpawn()
+    public class HelloWorldPlayer : NetworkBehaviour
     {
-        if (IsOwner)
+        public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
+
+        public override void OnNetworkSpawn()
         {
-            Move();
+            if (IsOwner)
+            {
+                Move();
+            }
         }
-    }
 
-    public void Move()
-    {
-        if (NetworkManager.Singleton.IsServer)
+        public void Move()
         {
-            var randomPosition = GetRandomPositionOnScreen();
-            transform.position = randomPosition;
-            Position.Value = randomPosition;
+            if (NetworkManager.Singleton.IsServer)
+            {
+                var randomPosition = GetRandomPositionOnScreen();
+                transform.position = randomPosition;
+                Position.Value = randomPosition;
+            }
+            else
+            {
+                SubmitPositionRequestServerRpc();
+            }
         }
-        else
+
+        [ServerRpc]
+        void SubmitPositionRequestServerRpc(ServerRpcParams rpcParams = default)
         {
-            SubmitPositionRequestServerRpc();
+            Position.Value = GetRandomPositionOnScreen();
         }
-    }
 
-    [ServerRpc]
-    void SubmitPositionRequestServerRpc(ServerRpcParams rpcParams = default)
-    {
-        Position.Value = GetRandomPositionOnScreen();
-    }
+        static Vector3 GetRandomPositionOnScreen()
+        {
+            return new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f),1f);
+        }
 
-    static Vector3 GetRandomPositionOnScreen()
-    {
-        return new Vector3(Random.Range(-3f, 3f), 1f, Random.Range(-3f, 3f));
-    }
-
-    void Update()
-    {
-        transform.position = Position.Value;
+        void Update()
+        {
+            transform.position = Position.Value;
+        }
     }
 }
+

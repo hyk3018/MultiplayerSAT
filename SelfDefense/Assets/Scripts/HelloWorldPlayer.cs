@@ -1,38 +1,32 @@
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace HelloWorld
 {
     public class HelloWorldPlayer : NetworkBehaviour
     {
-        public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
-
-        public override void OnNetworkSpawn()
-        {
-            if (IsOwner)
-            {
-                Move();
-            }
-        }
-
         public void Move()
         {
-            if (NetworkManager.Singleton.IsServer)
-            {
-                var randomPosition = GetRandomPositionOnScreen();
-                transform.position = randomPosition;
-                Position.Value = randomPosition;
-            }
-            else
-            {
-                SubmitPositionRequestServerRpc();
-            }
+            print("Move!");
+            // if (NetworkManager.Singleton.IsServer)
+            // {
+            //     var randomPosition = GetRandomPositionOnScreen();
+            //     transform.position = randomPosition;
+            //     Position.Value = randomPosition;
+            // }
+            // else
+            // {
+            //     SubmitPositionRequestServerRpc();
+            // }
+            SubmitPositionRequestServerRpc(GetRandomPositionOnScreen());
         }
 
         [ServerRpc]
-        void SubmitPositionRequestServerRpc(ServerRpcParams rpcParams = default)
+        public void SubmitPositionRequestServerRpc(Vector3 newPosition)
         {
-            Position.Value = GetRandomPositionOnScreen();
+            //Position.Value = GetRandomPositionOnScreen();
+            transform.position = newPosition;
         }
 
         static Vector3 GetRandomPositionOnScreen()
@@ -42,7 +36,7 @@ namespace HelloWorld
 
         void Update()
         {
-            transform.position = Position.Value;
+            //transform.position = Position.Value;
         }
     }
 }

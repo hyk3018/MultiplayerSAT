@@ -5,6 +5,24 @@ using UnityEngine;
 
 namespace Client.Commands
 {
+    public struct CommandData : INetworkSerializable
+    {
+        public CommandType CommandType;
+        public ulong[] TargetIds;
+
+        public CommandData(CommandType commandType, ulong[] targetIds)
+        {
+            CommandType = commandType;
+            TargetIds = targetIds;
+        }
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref CommandType);
+            serializer.SerializeValue(ref TargetIds);
+        }
+    }
+    
     public enum CommandType
     {
         BUILD_TOY,
@@ -15,9 +33,9 @@ namespace Client.Commands
     public class CommandPoint : NetworkBehaviour
     {
         [SerializeField]
-        private List<CommandType> configuredCommandTypes;
+        private List<CommandData> configuredCommandTypes;
         
-        public virtual List<CommandType> GetAvailableCommands()
+        public virtual List<CommandData> GetAvailableCommands()
         {
             return configuredCommandTypes;
         } 

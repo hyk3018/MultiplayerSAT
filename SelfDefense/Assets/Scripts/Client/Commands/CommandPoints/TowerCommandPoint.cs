@@ -1,21 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 
 namespace Client.Commands.CommandPoints
 {
     public class TowerCommandPoint : CommandPoint
     {
-        public override List<CommandType> GetAvailableCommands()
+        public override List<CommandData> GetAvailableCommands()
         {
             // Player can only do build commands for their own tower locations
-            if (IsOwner) return null;
-            
-            var commands = new List<CommandType>()
+            if (!IsOwner) return null;
+
+            var commands = new List<CommandData>();
+            foreach (CommandType commandType in Enum.GetValues(typeof(CommandType)))
             {
-                CommandType.BUILD_TOY,
-                CommandType.BUILD_JOKE,
-                CommandType.BUILD_MUSIC
-            };
+                commands.Add(new CommandData(commandType, new []{NetworkObjectId}));
+            }
 
             return commands;
         }

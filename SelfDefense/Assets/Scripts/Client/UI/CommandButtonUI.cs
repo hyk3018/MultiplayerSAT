@@ -1,47 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
+using Client.Avatar;
 using Client.Commands;
 using UnityEngine;
 using UnityEngine.UI;
 
-internal class CommandButtonUI : MonoBehaviour
+namespace Client.UI
 {
-    [SerializeField]
-    private List<Sprite> commandImages;
-
-    private Image _image;
-    private Button _button;
-    private CommandType _currentCommandType;
-
-    private void Awake()
+    internal class CommandButtonUI : MonoBehaviour
     {
-        _image = GetComponent<Image>();
-        _button = GetComponent<Button>();
-        _button.onClick.AddListener(() =>
-        {
-            
-        });
-    }
+        [SerializeField]
+        private List<Sprite> commandImages;
 
-    public void Initialise(CommandType commandType)
-    {
-        _currentCommandType = commandType;
-        
-        switch (commandType)
+        private Image _image;
+        private Button _button;
+        private CommandData _currentCommandData;
+
+        private void Awake()
         {
-            case CommandType.BUILD_TOY:
-                _image.sprite = commandImages[0];
-                break;
-            case CommandType.BUILD_MUSIC:
-                _image.sprite = commandImages[1];
-                break;
-            case CommandType.BUILD_JOKE:
-                _image.sprite = commandImages[2];
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(commandType), commandType, null);
+            _image = GetComponent<Image>();
+            _button = GetComponent<Button>();
         }
+
+        public void Initialise(CommandSensor commandSensor, CommandData commandData)
+        {
+            _button.onClick.AddListener(() =>
+            {
+                commandSensor.RequestCommand(_currentCommandData);
+            });
         
-        
+            _currentCommandData = commandData;
+            switch (commandData.CommandType)
+            {
+                case CommandType.BUILD_TOY:
+                    _image.sprite = commandImages[0];
+                    break;
+                case CommandType.BUILD_MUSIC:
+                    _image.sprite = commandImages[1];
+                    break;
+                case CommandType.BUILD_JOKE:
+                    _image.sprite = commandImages[2];
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(commandData), commandData, null);
+            }
+        }
     }
 }

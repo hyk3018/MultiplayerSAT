@@ -7,19 +7,42 @@ namespace Client.Avatar
 {
     public class CommandSensor : MonoBehaviour
     {
-        public event Action<List<CommandType>> CommandTypesChange;
+        public static event Action<List<CommandData>> CommandTypesChange;
+        private ClientInputProcessor _clientInputProcessor;
+        private List<CommandData> _currentCommandData;
+
+        private void Awake()
+        {
+            _clientInputProcessor = GetComponent<ClientInputProcessor>();
+        }
         
-        private void OnCollisionEnter2D(Collision2D other)
+        private void OnTriggerEnter2D(Collider2D other)
         {
             var commandPoints = other.gameObject.GetComponents<CommandPoint>();
-            var commandTypes = new List<CommandType>();
+            var commands = GetCommandsFromCommandPoints(commandPoints);
+            _currentCommandData = commands;
+            CommandTypesChange?.Invoke(commands);
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            var commandPoints = other.gameObject.GetComponents<CommandPoint>();
+            var commands = GetCommandsFromCommandPoints(commandPoints);
+            CommandTypesChange?.Invoke(new List<CommandData>());
+        }
+
+        private static List<CommandData> GetCommandsFromCommandPoints(CommandPoint[] commandPoints)
+        {
+            var commands = new List<CommandData>();
 
             foreach (CommandPoint commandPoint in commandPoints)
             {
-                commandTypes.AddRange(commandPoint.GetAvailableCommands());
+                commands.AddRange(commandPoint.GetAvailableCommands());
             }
-            
-            CommandTypesChange?.Invoke(commandTypes);
+
+            return commands;
         }
+
+        public void RequestCommand(CommandData commandData) => _clientInputProcessor.RequestCommand(commandData);
     }
 }

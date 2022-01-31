@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Client.Avatar;
 using Client.Commands;
+using Shared.Entity;
 using TK.Core.Common;
 using Unity.Netcode;
 using UnityEngine;
@@ -11,24 +13,34 @@ namespace Client.UI
     {
         [SerializeField]
         private GameObject commandButtonPrefab;
-    
+
+        private CommandSensor m_commandSensor;
+
         private void Awake()
         {
-            NetworkManager.Singleton
-                .LocalClient.PlayerObject.GetComponent<CommandSensor>()
-                .CommandTypesChange += OnCommandTypesChange;
+            CommandSensor.CommandTypesChange += OnCommandTypesChange;
         }
 
-        private void OnCommandTypesChange(List<CommandType> obj)
+        private void OnDestroy()
+        {
+            CommandSensor.CommandTypesChange -= OnCommandTypesChange;
+        }
+
+        private void OnCommandTypesChange(List<CommandData> availableCommands)
         {
             transform.RemoveAllChildGameObjects();
 
-            foreach (CommandType commandType in obj)
+            foreach (CommandData commandData in availableCommands)
             {
                 var go = Instantiate(commandButtonPrefab, transform);
                 var commandButton = go.GetComponent<CommandButtonUI>();
-                commandButton.Initialise(commandType);
+                commandButton.Initialise(m_commandSensor, commandData);
             }
+        }
+
+        public void Initialise(CommandSensor commandSensor)
+        {
+            m_commandSensor = commandSensor;
         }
     }
 }

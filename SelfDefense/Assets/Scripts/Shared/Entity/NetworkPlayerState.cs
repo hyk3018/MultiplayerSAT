@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Client.Avatar;
 using Client.Commands;
 using Server.Movement;
 using Unity.Netcode;
@@ -7,34 +8,53 @@ using UnityEngine;
 
 namespace Shared.Entity
 {
-    [RequireComponent(typeof(ServerPathFollower))]
     public class NetworkPlayerState : NetworkBehaviour
     {
+        public float MoveSpeed;
         public static event Action<NetworkObject> PlayerSpawned;
+        public event Action<StateData> ServerStateReceived;
         
-        private ServerPathFollower m_serverPathFollower;
+        private bool _inputReceived;
+        private Queue<ClientInputData> _inputQueue;
+        private StateData[] _stateBuffer;
+        private const int BUFFER_SIZE = 1024;
+
+        private void Awake()
+        {
+            _inputQueue = new Queue<ClientInputData>();
+            _stateBuffer = new StateData[BUFFER_SIZE];
+            NetworkManager.Singleton.NetworkTickSystem.Tick += HandleTick;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            
+            if (NetworkManager.Singleton != null)
+                NetworkManager.Singleton.NetworkTickSystem.Tick -= HandleTick;
+        }
 
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
             PlayerSpawned?.Invoke(GetComponent<NetworkObject>());
         }
-
-        private void Awake()
+        
+        [ClientRpc]
+        private void ReturnResultStateClientRpc(StateData stateData, ClientRpcParams clientRpcParams = default)
         {
-            m_serverPathFollower = GetComponent<ServerPathFollower>();
+            ServerStateReceived?.Invoke(stateData);
         }
 
         [ServerRpc]
-        public void SubmitPositionRequestServerRpc(Vector3 newPosition)
+        public void SubmitPlayerInputServerRpc(ClientInputData clientInputData)
         {
-            m_serverPathFollower.SetNewPath(new List<Vector3>() {newPosition});
-        }
+            _inputQueue.Enqueue(clientInputData);
+            return;
+            
 
-        [ServerRpc]
-        public void SubmitCommandRequestServerRpc(CommandData requestedCommand)
-        {
-            switch (requestedCommand.CommandType)
+            if (!clientInputData.DoCommand) return;
+            switch (clientInputData.RequestedCommand.CommandType)
             {
                 case CommandType.BUILD_TOY:
                     Debug.Log("Build toy command requested");
@@ -46,6 +66,43 @@ namespace Shared.Entity
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private void HandleTick()
+        {
+            int bufferIndex = -1;
+            while (_inputQueue.Count > 0)
+            {
+                ClientInputData clientInput = _inputQueue.Dequeue();
+
+                bufferIndex = clientInput.Tick % BUFFER_SIZE;
+
+                StateData stateData = ProcessInput(clientInput);
+                _stateBuffer[bufferIndex] = stateData;
+            }
+
+            if (bufferIndex != -1)
+            {
+                var clientRpcParams = new ClientRpcParams()
+                {
+                    Send = new ClientRpcSendParams()
+                    {
+                        TargetClientIds = new ulong[]{OwnerClientId}
+                    }
+                };
+                ReturnResultStateClientRpc(_stateBuffer[bufferIndex], clientRpcParams);
+            }
+        }
+
+        private StateData ProcessInput(ClientInputData input)
+        {
+            transform.position += input.MoveTarget * MoveSpeed;
+
+            return new StateData()
+            {
+                Tick = input.Tick,
+                Position = transform.position
+            };
         }
     }
 }

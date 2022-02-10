@@ -7,7 +7,9 @@ namespace Client.UI
 {
     public class ConnectionManagerUI : MonoBehaviour
     {
-
+        [SerializeField]
+        private GameObject playerPrefab;
+        
         [SerializeField]
         private Button startButton;
 
@@ -20,9 +22,11 @@ namespace Client.UI
         [SerializeField]
         private TMP_Text roomCodeText;
 
+        [SerializeField]
+        private GameObject clickWhenReady;
+
         public void Start()
         {
-            Debug.Log("hello");
             startButton.onClick.AddListener(StartHost);
             joinButton.onClick.AddListener(Join);
         }
@@ -36,7 +40,10 @@ namespace Client.UI
             }
 
             if (NetworkManager.Singleton.StartHost())
+            {
                 Debug.Log("Host started");
+                clickWhenReady.SetActive(true);
+            }
             else
                 Debug.Log("Failed to host");
         
@@ -46,9 +53,12 @@ namespace Client.UI
         {
             if (RelayConnectionManager.Instance.IsRelayEnabled)
                 await RelayConnectionManager.Instance.JoinRelay(joinCodeInput.text);
-        
+
             if (NetworkManager.Singleton.StartClient())
+            {
                 Debug.Log("Client started");
+                clickWhenReady.SetActive(true);
+            }
             else
                 Debug.Log("Failed to start client");
         }

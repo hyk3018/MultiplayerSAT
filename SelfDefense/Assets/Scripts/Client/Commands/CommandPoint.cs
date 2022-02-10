@@ -19,7 +19,25 @@ namespace Client.Commands
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref CommandType);
-            serializer.SerializeValue(ref TargetIds);
+
+            if (TargetIds == null) return;
+            
+            int length = 0;
+            if (!serializer.IsReader)
+            {
+                length = TargetIds.Length;
+            }
+
+            serializer.SerializeValue(ref length);
+            if (serializer.IsReader)
+            {
+                TargetIds = new ulong[length];
+            }
+
+            for (int i = 0; i < TargetIds.Length; i++)
+            {
+                serializer.SerializeValue(ref TargetIds[i]);
+            }
         }
     }
     

@@ -10,9 +10,11 @@ namespace Server.Movement
         [SerializeField]
         private float moveSpeed;
         
-        private List<Vector3> m_currentPath;
-        private Vector3 m_nextMoveVector;
-        private bool m_moving;
+        private List<Vector3> _currentPath;
+        private Vector3 _nextMoveVector;
+        private bool _moving;
+
+        public float MoveSpeed => moveSpeed;
 
         public override void OnNetworkSpawn()
         {
@@ -25,55 +27,55 @@ namespace Server.Movement
 
         public void SetNewPath(List<Vector3> newPath)
         {
-            m_currentPath = newPath;
-            m_moving = true;
+            _currentPath = newPath;
+            _moving = true;
         }
 
         public void AddToCurrentPath(List<Vector3> pathToAdd)
         {
-            m_currentPath.AddRange(pathToAdd);
-            m_moving = true;
+            _currentPath.AddRange(pathToAdd);
+            _moving = true;
         }
 
         public bool HasPathTarget()
         {
-            return m_currentPath.Count > 0;
+            return _currentPath.Count > 0;
         }
         
         public void CalculateNextMovementDirection()
         {
-            if (m_currentPath == null || m_currentPath.Count < 1)
+            if (_currentPath == null || _currentPath.Count < 1)
             {
-                m_nextMoveVector = Vector3.zero;
+                _nextMoveVector = Vector3.zero;
                 return;
             }
 
             var currentPosition = transform.position;
-            var distanceToTarget = Vector3.Distance(currentPosition, m_currentPath[0]);
+            var distanceToTarget = Vector3.Distance(currentPosition, _currentPath[0]);
             if (distanceToTarget < moveSpeed)
             {
-                transform.position = m_currentPath[0];
-                m_currentPath.RemoveAt(0);
+                transform.position = _currentPath[0];
+                _currentPath.RemoveAt(0);
                 distanceToTarget = moveSpeed - distanceToTarget;
             }
             
             // If we reached the end of the path midway through movement then stop
-            if (m_currentPath.Count == 0)
+            if (_currentPath.Count == 0)
             {
-                m_nextMoveVector = Vector3.zero;
-                m_moving = false;
+                _nextMoveVector = Vector3.zero;
+                _moving = false;
                 return;
             }
             
-            m_nextMoveVector = Mathf.Min(distanceToTarget, moveSpeed) * (m_currentPath[0] - currentPosition).normalized;
+            _nextMoveVector = Mathf.Min(distanceToTarget, moveSpeed) * (_currentPath[0] - currentPosition).normalized;
         }
 
         private void FixedUpdate()
         {
-            if (m_moving)
+            if (_moving)
             {
                 CalculateNextMovementDirection();
-                transform.position += m_nextMoveVector;
+                transform.position += _nextMoveVector;
             }
         }
     }

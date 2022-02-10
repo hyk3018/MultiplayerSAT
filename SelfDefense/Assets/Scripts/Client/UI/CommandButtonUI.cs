@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Client.UI
 {
-    internal class CommandButtonUI : MonoBehaviour
+    public class CommandButtonUI : MonoBehaviour
     {
         [SerializeField]
         private List<Sprite> commandImages;

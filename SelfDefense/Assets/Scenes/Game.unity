@@ -9263,7 +9263,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c93ad2618e2e60e4ca58244a14e21ede, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 8654684128922175749, guid: 5f2b3a5abf13ab64f824ab768d464755, type: 3}
   startButton: {fileID: 135486447}
   joinButton: {fileID: 876227609}
   joinCodeInput: {fileID: 753239455}
@@ -11336,6 +11335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2536f34db08d4b45aad8fe58ca8b6040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerSpawnPrefab: {fileID: 8654684128922175749, guid: 5f2b3a5abf13ab64f824ab768d464755, type: 3}
 --- !u!1 &1641556908
 GameObject:
   m_ObjectHideFlags: 0

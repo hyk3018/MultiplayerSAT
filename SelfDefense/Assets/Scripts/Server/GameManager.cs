@@ -5,6 +5,9 @@ namespace Server
 {
     public class GameManager : NetworkBehaviour
     {
+        [SerializeField]
+        private GameObject playerSpawnPrefab;
+        
         private int _readyCount;
 
         [ServerRpc(RequireOwnership = false)]
@@ -15,6 +18,12 @@ namespace Server
             if (_readyCount == 2)
             {
                 Debug.Log("Game starts!");
+
+                foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+                {
+                    var go = Instantiate(playerSpawnPrefab);
+                    go.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
+                }
             }
         }
     }

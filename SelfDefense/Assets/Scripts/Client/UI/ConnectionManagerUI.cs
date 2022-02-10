@@ -1,3 +1,4 @@
+using Server;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -7,9 +8,6 @@ namespace Client.UI
 {
     public class ConnectionManagerUI : MonoBehaviour
     {
-        [SerializeField]
-        private GameObject playerPrefab;
-        
         [SerializeField]
         private Button startButton;
 

@@ -1,6 +1,7 @@
 using System;
 using Client.Commands;
 using HelloWorld;
+using Server;
 using Server.Movement;
 using Shared.Entity;
 using Shared.Network;
@@ -42,7 +43,6 @@ namespace Client.Avatar
         private NetworkPlayerState _networkPlayerState;
         private Camera _mainCamera;
 
-        private int _currentTick;
         private StateData[] _stateBuffer;
         private ClientInputData[] _inputBuffer;
         private StateData _latestServerState;
@@ -50,6 +50,8 @@ namespace Client.Avatar
         private float _horizontalInput;
         private float _verticalInput;
         private const int BUFFER_SIZE = 1024;
+
+        private int tick;
 
         private void Awake()
         {
@@ -60,13 +62,13 @@ namespace Client.Avatar
             _inputBuffer = new ClientInputData[BUFFER_SIZE];
             
             _networkPlayerState.ServerStateReceived += OnServerStateReceived;
-            NetworkManager.Singleton.NetworkTickSystem.Tick += HandleTick;
+            GameManager.Instance.Tick += HandleTick;
         }
         
         private void OnDestroy()
         {
             _networkPlayerState.ServerStateReceived -= OnServerStateReceived;
-            NetworkManager.Singleton.NetworkTickSystem.Tick -= HandleTick;
+            GameManager.Instance.Tick -= HandleTick;
         }
         
         private void OnServerStateReceived(StateData serverState)
@@ -82,21 +84,20 @@ namespace Client.Avatar
             _currentRequestedCommand = requestedCommand;
         }
         
-        private void HandleTick()
+        private void HandleTick(int currentTick)
         {
             if (!_networkPlayerState.IsOwner) return;
 
             // Populate input data
             var clientInputData = new ClientInputData()
             {
-                Tick = _currentTick, ClientID = _networkPlayerState.OwnerClientId,
+                Tick = currentTick, ClientID = _networkPlayerState.OwnerClientId,
                 MoveTarget = new Vector3(_horizontalInput, _verticalInput, transform.position.z),
                 DoCommand = _commandRequested, RequestedCommand = _currentRequestedCommand
             };
             
             if (NetworkManager.Singleton.IsHost)
             {
-                
                 _networkPlayerState.SubmitPlayerInputServerRpc(clientInputData);
             }
             else
@@ -105,21 +106,22 @@ namespace Client.Avatar
                     (_lastProcessedState.Equals(default(StateData)) ||
                      !_latestServerState.Equals(_lastProcessedState)))
                 {
-                    HandleServerReconciliation();
+                    HandleServerReconciliation(currentTick);
                 }
 
-                var bufferIndex = _currentTick % BUFFER_SIZE;
+                var bufferIndex = currentTick % BUFFER_SIZE;
                 _inputBuffer[bufferIndex] = clientInputData;
-                _stateBuffer[bufferIndex] = ProcessInput(clientInputData);
-                
+                var newState = _networkPlayerState.ProcessInput(clientInputData);
+                transform.position =newState.Position;
+                _stateBuffer[bufferIndex] = newState;
+
                 _networkPlayerState.SubmitPlayerInputServerRpc(clientInputData);
-                _currentTick++;
             }
 
             _commandRequested = false;
         }
 
-        private void HandleServerReconciliation()
+        private void HandleServerReconciliation(int currentTick)
         {
             _lastProcessedState = _latestServerState;
 
@@ -128,28 +130,20 @@ namespace Client.Avatar
                 Vector3.Distance(_latestServerState.Position, _stateBuffer[serverStateBufferIndex].Position);
 
             if (positionError <= 0.1f) return;
-            
+
+            Debug.Log("Needs correction");
             transform.position = _latestServerState.Position;
             _stateBuffer[serverStateBufferIndex] = _latestServerState;
 
             var tickToProcess = _latestServerState.Tick + 1;
 
-            while (tickToProcess < _currentTick)
+            while (tickToProcess < currentTick)
             {
-                var state = ProcessInput(_inputBuffer[tickToProcess % BUFFER_SIZE]);
+                var state = _networkPlayerState.ProcessInput(_inputBuffer[tickToProcess % BUFFER_SIZE]);
+                transform.position = state.Position;
                 _stateBuffer[tickToProcess % BUFFER_SIZE] = state;
                 tickToProcess++;
             }
-        }
-
-        private StateData ProcessInput(ClientInputData clientInputData)
-        {
-            transform.position += _networkPlayerState.MoveSpeed * clientInputData.MoveTarget.normalized;
-            return new StateData()
-            {
-                Tick = clientInputData.Tick,
-                Position = transform.position
-            };
         }
 
         void Update()

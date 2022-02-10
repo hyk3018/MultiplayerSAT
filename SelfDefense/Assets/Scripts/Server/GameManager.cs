@@ -1,29 +1,64 @@
-﻿using Unity.Netcode;
+﻿using System;
+using TK.Core.Common;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Server
 {
-    public class GameManager : NetworkBehaviour
+    public class GameManager : Singleton<GameManager>
     {
         [SerializeField]
         private GameObject playerSpawnPrefab;
+
+        [SerializeField]
+        private int minReady;
         
-        private int _readyCount;
+        public event Action<int> Tick;
+        public event Action GameStarted;
+
+        private double _previousTime;
+        private float timer;
+        private int _currentTick;
+        private float _tickPeriod;
+
+        public NetworkVariable<int> readyCount;
+        
+        private bool _gameStarted;
 
         [ServerRpc(RequireOwnership = false)]
         public void SetReadyServerRpc(bool ready)
         {
-            _readyCount = ready ? _readyCount + 1 : _readyCount - 1;
-            _readyCount = Mathf.Max(0, _readyCount);
-            if (_readyCount == 2)
+            readyCount.Value = ready ? readyCount.Value + 1 : readyCount.Value - 1;
+            readyCount.Value = Mathf.Max(0, readyCount.Value);
+            if (readyCount.Value == minReady)
             {
-                Debug.Log("Game starts!");
-
                 foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
                 {
                     var go = Instantiate(playerSpawnPrefab);
                     go.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
                 }
+                StartGameAtTimeClientRpc(NetworkManager.ServerTime.Tick);
+            }
+        }
+
+        [ClientRpc]
+        private void StartGameAtTimeClientRpc(int tick)
+        {
+            _currentTick = NetworkManager.LocalTime.Tick;
+            _gameStarted = true;
+            _tickPeriod = 1f / NetworkManager.LocalTime.TickRate;
+            GameStarted?.Invoke();
+        }
+
+        private void Update()
+        {
+            if (!_gameStarted) return;
+
+            timer += Time.deltaTime;
+            while (timer >= _tickPeriod)
+            {
+                timer -= _tickPeriod;
+                Tick?.Invoke(++_currentTick);
             }
         }
     }

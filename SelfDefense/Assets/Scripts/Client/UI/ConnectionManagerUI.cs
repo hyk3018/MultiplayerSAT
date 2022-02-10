@@ -21,12 +21,26 @@ namespace Client.UI
         private TMP_Text roomCodeText;
 
         [SerializeField]
-        private GameObject clickWhenReady;
+        private GameObject readyStatusBar;
+
+        [SerializeField]
+        private TMP_Text playersReadyText;
+        
+        [SerializeField]
+        private GameManager gameManager;
 
         public void Start()
         {
             startButton.onClick.AddListener(StartHost);
             joinButton.onClick.AddListener(Join);
+            gameManager.readyCount.OnValueChanged +=
+                (oldValue, newValue) => playersReadyText.text = newValue.ToString();
+            gameManager.GameStarted += () =>
+            {
+                readyStatusBar.SetActive(false);
+                gameObject.SetActive(false);
+                
+            };
         }
 
         private async void StartHost()
@@ -40,7 +54,7 @@ namespace Client.UI
             if (NetworkManager.Singleton.StartHost())
             {
                 Debug.Log("Host started");
-                clickWhenReady.SetActive(true);
+                readyStatusBar.SetActive(true);
             }
             else
                 Debug.Log("Failed to host");
@@ -55,7 +69,8 @@ namespace Client.UI
             if (NetworkManager.Singleton.StartClient())
             {
                 Debug.Log("Client started");
-                clickWhenReady.SetActive(true);
+                readyStatusBar.SetActive(true);
+                roomCodeText.text = joinCodeInput.text;
             }
             else
                 Debug.Log("Failed to start client");

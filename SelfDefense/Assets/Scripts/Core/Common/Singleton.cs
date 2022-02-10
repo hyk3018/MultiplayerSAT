@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 
 namespace TK.Core.Common
 {
-    public class Singleton<T> : MonoBehaviour where T : Component
+    public class Singleton<T> : NetworkBehaviour where T : Component
     {
         private static T _instance;
 

@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using Client.Avatar;
 using Client.Commands;
+using Server;
 using Server.Movement;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace Shared.Entity
@@ -13,8 +15,8 @@ namespace Shared.Entity
         public float MoveSpeed;
         public static event Action<NetworkObject> PlayerSpawned;
         public event Action<StateData> ServerStateReceived;
-        
-        private bool _inputReceived;
+
+        private NetworkTransform _networkTransform;
         private Queue<ClientInputData> _inputQueue;
         private StateData[] _stateBuffer;
         private const int BUFFER_SIZE = 1024;
@@ -23,7 +25,7 @@ namespace Shared.Entity
         {
             _inputQueue = new Queue<ClientInputData>();
             _stateBuffer = new StateData[BUFFER_SIZE];
-            NetworkManager.Singleton.NetworkTickSystem.Tick += HandleTick;
+            GameManager.Instance.Tick += HandleTick;
         }
 
         public override void OnDestroy()
@@ -31,12 +33,18 @@ namespace Shared.Entity
             base.OnDestroy();
             
             if (NetworkManager.Singleton != null)
-                NetworkManager.Singleton.NetworkTickSystem.Tick -= HandleTick;
+                GameManager.Instance.Tick -= HandleTick;
         }
 
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+            _networkTransform = GetComponent<NetworkTransform>();
+            
+            if (IsOwnedByServer)
+            {
+                _networkTransform.enabled = true;
+            }
             PlayerSpawned?.Invoke(GetComponent<NetworkObject>());
         }
         
@@ -68,7 +76,7 @@ namespace Shared.Entity
             }
         }
 
-        private void HandleTick()
+        private void HandleTick(int tick)
         {
             int bufferIndex = -1;
             while (_inputQueue.Count > 0)
@@ -78,30 +86,24 @@ namespace Shared.Entity
                 bufferIndex = clientInput.Tick % BUFFER_SIZE;
 
                 StateData stateData = ProcessInput(clientInput);
+                transform.position = stateData.Position;
                 _stateBuffer[bufferIndex] = stateData;
             }
 
             if (bufferIndex != -1)
             {
-                var clientRpcParams = new ClientRpcParams()
-                {
-                    Send = new ClientRpcSendParams()
-                    {
-                        TargetClientIds = new ulong[]{OwnerClientId}
-                    }
-                };
-                ReturnResultStateClientRpc(_stateBuffer[bufferIndex], clientRpcParams);
+                ReturnResultStateClientRpc(_stateBuffer[bufferIndex]);
             }
         }
 
-        private StateData ProcessInput(ClientInputData input)
+        public StateData ProcessInput(ClientInputData input)
         {
-            transform.position += input.MoveTarget * MoveSpeed;
-
+            var newPos = transform.position + input.MoveTarget * MoveSpeed;
+            
             return new StateData()
             {
                 Tick = input.Tick,
-                Position = transform.position
+                Position = newPos
             };
         }
     }

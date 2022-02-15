@@ -1053,12 +1053,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waves:
-  - Spawns:
-    - EnemyPrefab: {fileID: 698134713019803566, guid: 37ca1e21701149f498d1723dbb19e298, type: 3}
-      Path: {fileID: 1120202305}
-    - EnemyPrefab: {fileID: 698134713019803566, guid: 37ca1e21701149f498d1723dbb19e298, type: 3}
-      Path: {fileID: 1120202305}
-    MinNextSpawnTime: 5
+  - Batches:
+    - EnemySpawned:
+        EnemyPrefab: {fileID: 583508925}
+        Path: {fileID: 1120202305}
+      Amount: 5
+      SpawnStartTime: 3
+      InterSpawnDelay: 1
+    MinNextSpawnTime: 10
 --- !u!1 &555095380
 GameObject:
   m_ObjectHideFlags: 0
@@ -1266,7 +1268,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1284,6 +1286,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a810cc6a3f3f47d0bcceba05f893c940, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &583508925 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 698134713019803566, guid: 37ca1e21701149f498d1723dbb19e298, type: 3}
+  m_PrefabInstance: {fileID: 8223020090664992033}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &678648509
 GameObject:
   m_ObjectHideFlags: 0
@@ -11674,7 +11681,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSpawnPrefab: {fileID: 8654684128922175749, guid: 5f2b3a5abf13ab64f824ab768d464755, type: 3}
-  minReady: 2
+  minReady: 1
   readyCount:
     m_InternalValue: 0
 --- !u!1 &1641556908

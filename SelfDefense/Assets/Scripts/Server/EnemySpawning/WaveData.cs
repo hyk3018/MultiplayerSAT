@@ -5,10 +5,20 @@ using UnityEngine;
 namespace Server.EnemySpawning
 {
     [Serializable]
+    public struct WaveBatchData
+    {
+        public EnemySpawnData EnemySpawned;
+        public int Amount;
+        public float SpawnStartTime;
+        public float InterSpawnDelay;
+    }
+    
+    [Serializable]
     public struct WaveData
     {
         [SerializeField]
-        public List<EnemySpawnData> Spawns;
+        public List<WaveBatchData> Batches;
+
         public float MinNextSpawnTime;
     }
 }

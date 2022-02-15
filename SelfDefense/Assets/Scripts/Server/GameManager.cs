@@ -16,8 +16,7 @@ namespace Server
         public event Action<int> Tick;
         public event Action GameStarted;
 
-        private double _previousTime;
-        private float timer;
+        private float _timer;
         private int _currentTick;
         private float _tickPeriod;
 
@@ -54,10 +53,10 @@ namespace Server
         {
             if (!_gameStarted) return;
 
-            timer += Time.deltaTime;
-            while (timer >= _tickPeriod)
+            _timer += Time.deltaTime;
+            while (_timer >= _tickPeriod)
             {
-                timer -= _tickPeriod;
+                _timer -= _tickPeriod;
                 Tick?.Invoke(++_currentTick);
             }
         }

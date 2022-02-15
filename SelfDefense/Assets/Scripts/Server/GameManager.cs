@@ -1,4 +1,5 @@
 ﻿using System;
+using Server.EnemySpawning;
 using TK.Core.Common;
 using Unity.Netcode;
 using UnityEngine;
@@ -12,6 +13,9 @@ namespace Server
 
         [SerializeField]
         private int minReady;
+
+        [SerializeField]
+        private ServerEnemySpawner enemySpawner;
         
         public event Action<int> Tick;
         public event Action GameStarted;
@@ -24,20 +28,28 @@ namespace Server
         
         private bool _gameStarted;
 
+        private void Awake()
+        {
+            readyCount.OnValueChanged += (value, newValue) =>
+            {
+                if (newValue == minReady)
+                {
+                    foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+                    {
+                        var go = Instantiate(playerSpawnPrefab);
+                        go.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
+                    }
+
+                    StartGameAtTimeClientRpc(NetworkManager.ServerTime.Tick);
+                    enemySpawner.SpawnNextWave();
+                }
+            };
+        }
+
         [ServerRpc(RequireOwnership = false)]
         public void SetReadyServerRpc(bool ready)
         {
-            readyCount.Value = ready ? readyCount.Value + 1 : readyCount.Value - 1;
-            readyCount.Value = Mathf.Max(0, readyCount.Value);
-            if (readyCount.Value == minReady)
-            {
-                foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
-                {
-                    var go = Instantiate(playerSpawnPrefab);
-                    go.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
-                }
-                StartGameAtTimeClientRpc(NetworkManager.ServerTime.Tick);
-            }
+            readyCount.Value = Mathf.Max(0, ready ? readyCount.Value + 1 : readyCount.Value - 1);
         }
 
         [ClientRpc]

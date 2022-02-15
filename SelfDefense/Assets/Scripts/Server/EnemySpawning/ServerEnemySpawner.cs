@@ -57,7 +57,7 @@ namespace Server.EnemySpawning
                 return false;
             }
 
-            var go = Instantiate(enemySpawnData.EnemyPrefab, transform);
+            var go = Instantiate(enemySpawnData.EnemyPrefab);
             var pathFollower = go.GetComponent<ServerPathFollower>();
 
             if (pathFollower == null)
@@ -68,9 +68,11 @@ namespace Server.EnemySpawning
             }
 
             var path = GetVectorPath(enemySpawnData.Path);
+            go.transform.position = path[0];
             pathFollower.SetNewPath(path);
             
             var networkObject = go.GetComponent<NetworkObject>();
+            networkObject.TrySetParent(transform);
 
             if (networkObject == null)
             {

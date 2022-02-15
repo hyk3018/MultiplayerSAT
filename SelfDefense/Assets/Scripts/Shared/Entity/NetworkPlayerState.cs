@@ -32,7 +32,7 @@ namespace Shared.Entity
         {
             base.OnDestroy();
             
-            if (NetworkManager.Singleton != null)
+            if (GameManager.Instance != null)
                 GameManager.Instance.Tick -= HandleTick;
         }
 

@@ -16,6 +16,21 @@ namespace Server.Movement
 
         public float MoveSpeed => moveSpeed;
 
+        private void Awake()
+        {
+            GameManager.Instance.Tick += HandleTick;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.Tick -= HandleTick;
+            }
+        }
+
         public override void OnNetworkSpawn()
         {
             if (!IsServer)
@@ -42,7 +57,7 @@ namespace Server.Movement
             return _currentPath.Count > 0;
         }
         
-        public void CalculateNextMovementDirection()
+        private void CalculateNextMovementDirection()
         {
             if (_currentPath == null || _currentPath.Count < 1)
             {
@@ -70,7 +85,7 @@ namespace Server.Movement
             _nextMoveVector = Mathf.Min(distanceToTarget, moveSpeed) * (_currentPath[0] - currentPosition).normalized;
         }
 
-        private void FixedUpdate()
+        private void HandleTick(int tick)
         {
             if (_moving)
             {

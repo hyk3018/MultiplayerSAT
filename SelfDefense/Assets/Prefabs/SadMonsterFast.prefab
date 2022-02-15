@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4048804875825101559}
   - component: {fileID: 7451939120539691463}
   m_Layer: 0
-  m_Name: SadMonster
+  m_Name: SadMonsterFast
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc8b98e9b59cd524ba894a9d5de14426, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0.08
+  moveSpeed: 0.14
 --- !u!114 &4048804875825101559
 MonoBehaviour:
   m_ObjectHideFlags: 0

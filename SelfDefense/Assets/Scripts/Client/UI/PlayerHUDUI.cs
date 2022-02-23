@@ -26,10 +26,7 @@ namespace Client.UI
         {
             if (playerObject.IsOwner)
             {
-                var commandPanelUI = Instantiate(commandsUIPrefab, transform)
-                    .GetComponent<CommandPanelUI>();
-
-                commandPanelUI.Initialise(playerObject.GetComponent<CommandSensor>());
+                var commandPanelUI = Instantiate(commandsUIPrefab, transform);
             }
         }
     }

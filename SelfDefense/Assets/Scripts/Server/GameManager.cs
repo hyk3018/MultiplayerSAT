@@ -18,7 +18,7 @@ namespace Server
         private ServerEnemySpawner enemySpawner;
         
         public event Action<int> Tick;
-        public event Action GameStarted;
+        public event Action<ulong, ulong> GameStarted;
 
         private float _timer;
         private int _currentTick;
@@ -30,20 +30,27 @@ namespace Server
 
         private void Awake()
         {
-            readyCount.OnValueChanged += (value, newValue) =>
-            {
-                if (newValue == minReady)
-                {
-                    foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
-                    {
-                        var go = Instantiate(playerSpawnPrefab);
-                        go.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
-                    }
+            readyCount.OnValueChanged += StartGameIfReady;
+        }
 
-                    StartGameAtTimeClientRpc(NetworkManager.ServerTime.Tick);
-                    enemySpawner.SpawnNextWave();
+        private void StartGameIfReady(int value, int newValue)
+        {
+            if (!IsHost) return;
+            if (newValue == minReady)
+            {
+                foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+                {
+                    var go = Instantiate(playerSpawnPrefab);
+                    go.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
                 }
-            };
+                
+                var clientIds = NetworkManager.Singleton.ConnectedClientsIds;
+                var player1IdIndex = clientIds[0] == NetworkManager.Singleton.LocalClientId ? 0 : 1;
+                var player2Id = clientIds.Count == 2 ? clientIds[1 - player1IdIndex] : 0;
+
+                StartGameAtTimeClientRpc(clientIds[player1IdIndex], player2Id);
+                enemySpawner.SpawnNextWave();
+            }
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -53,12 +60,13 @@ namespace Server
         }
 
         [ClientRpc]
-        private void StartGameAtTimeClientRpc(int tick)
+        private void StartGameAtTimeClientRpc(ulong player1Id, ulong player2Id)
         {
             _currentTick = NetworkManager.LocalTime.Tick;
             _gameStarted = true;
             _tickPeriod = 1f / NetworkManager.LocalTime.TickRate;
-            GameStarted?.Invoke();
+
+            GameStarted?.Invoke(player1Id, player2Id);
         }
 
         private void Update()
@@ -71,6 +79,18 @@ namespace Server
                 _timer -= _tickPeriod;
                 Tick?.Invoke(++_currentTick);
             }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RetrieveStartingPlayerCountServerRpc()
+        {
+            SendStartingPlayerCountClientRpc();
+        }
+
+        [ClientRpc]
+        private void SendStartingPlayerCountClientRpc()
+        {
+            readyCount.OnValueChanged?.Invoke(readyCount.Value, readyCount.Value);
         }
     }
 }

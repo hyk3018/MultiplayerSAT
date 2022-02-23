@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using Client.Commands;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Client.Avatar
 {
-    public class CommandSensor : MonoBehaviour
+    public class CommandSensor : NetworkBehaviour
     {
-        public static event Action<List<CommandData>> CommandTypesChange;
+        public static event Action<Dictionary<CommandExecutor, List<CommandData>>> CommandTypesChange;
         private ClientInputProcessor _clientInputProcessor;
-        private List<CommandData> _currentCommandData;
+        private Dictionary<CommandExecutor, List<CommandData>> _currentCommandData;
 
         private void Awake()
         {
@@ -18,29 +19,35 @@ namespace Client.Avatar
         
         private void OnTriggerEnter2D(Collider2D other)
         {
-            var commandPoints = other.gameObject.GetComponents<CommandPoint>();
+            if (!IsOwner) return;
+            
+            var commandPoints = other.gameObject.GetComponents<CommandExecutor>();
             var commands = GetCommandsFromCommandPoints(commandPoints);
             _currentCommandData = commands;
-            CommandTypesChange?.Invoke(commands);
+            CommandTypesChange?.Invoke(_currentCommandData);
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            var commandPoints = other.gameObject.GetComponents<CommandPoint>();
+            if (!IsOwner) return;
+            
+            var commandPoints = other.gameObject.GetComponents<CommandExecutor>();
             var commands = GetCommandsFromCommandPoints(commandPoints);
-            CommandTypesChange?.Invoke(new List<CommandData>());
+            CommandTypesChange?.Invoke(new Dictionary<CommandExecutor, List<CommandData>>());
         }
 
-        private static List<CommandData> GetCommandsFromCommandPoints(CommandPoint[] commandPoints)
+        private static Dictionary<CommandExecutor, List<CommandData>> GetCommandsFromCommandPoints(CommandExecutor[] commandExecutors)
         {
-            var commands = new List<CommandData>();
+            var executorCommands = new Dictionary<CommandExecutor, List<CommandData>>();
 
-            foreach (CommandPoint commandPoint in commandPoints)
+            foreach (CommandExecutor commandExecutor in commandExecutors)
             {
-                commands.AddRange(commandPoint.GetAvailableCommands());
+                var commands = new List<CommandData>();
+                commands.AddRange(commandExecutor.GetAvailableCommands());
+                executorCommands.Add(commandExecutor, commands);
             }
 
-            return commands;
+            return executorCommands;
         }
 
         public void RequestCommand(CommandData commandData) => _clientInputProcessor.RequestCommand(commandData);

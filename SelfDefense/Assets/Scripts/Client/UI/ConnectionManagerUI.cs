@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Threading.Tasks;
 using Server;
 using TMPro;
 using Unity.Netcode;
@@ -35,7 +37,7 @@ namespace Client.UI
             joinButton.onClick.AddListener(Join);
             gameManager.readyCount.OnValueChanged +=
                 (oldValue, newValue) => playersReadyText.text = newValue.ToString();
-            gameManager.GameStarted += () =>
+            gameManager.GameStarted += (_,__) =>
             {
                 readyStatusBar.SetActive(false);
                 gameObject.SetActive(false);
@@ -65,15 +67,30 @@ namespace Client.UI
         {
             if (RelayConnectionManager.Instance.IsRelayEnabled)
                 await RelayConnectionManager.Instance.JoinRelay(joinCodeInput.text);
-
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+            
             if (NetworkManager.Singleton.StartClient())
             {
                 Debug.Log("Client started");
-                readyStatusBar.SetActive(true);
-                roomCodeText.text = joinCodeInput.text;
             }
             else
                 Debug.Log("Failed to start client");
+        }
+
+        private void OnClientConnected(ulong clientId)
+        {
+            gameManager.RetrieveStartingPlayerCountServerRpc();
+            readyStatusBar.SetActive(true);
+            roomCodeText.text = joinCodeInput.text;
+            NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
+        }
+
+        private IEnumerator SyncLobbyDataOnStart()
+        {
+            yield return new WaitForSeconds(0.5f);
+            
+            readyStatusBar.SetActive(true);
+            roomCodeText.text = joinCodeInput.text;
         }
     }
 }

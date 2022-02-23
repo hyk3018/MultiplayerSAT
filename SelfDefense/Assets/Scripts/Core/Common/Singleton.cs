@@ -21,12 +21,12 @@ namespace TK.Core.Common
                         Debug.Log("There exists more than one type of " + typeof(T).Name + "in the scene");
                     }
 
-                    if (_instance == null)
-                    {
-                        GameObject obj = new GameObject();
-                        obj.name = string.Format("_{0}", typeof(T).Name);
-                        _instance = obj.AddComponent<T>();
-                    }
+                    // if (_instance == null)
+                    // {
+                    //     GameObject obj = new GameObject();
+                    //     obj.name = string.Format("_{0}", typeof(T).Name);
+                    //     _instance = obj.AddComponent<T>();
+                    // }
                 }
 
                 return _instance;

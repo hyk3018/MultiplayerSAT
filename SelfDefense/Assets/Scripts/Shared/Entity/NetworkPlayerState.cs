@@ -69,7 +69,7 @@ namespace Shared.Entity
                     break;
                 case CommandType.BUILD_MUSIC:
                     break;
-                case CommandType.BUILD_JOKE:
+                case CommandType.BUILD_LAUGHTER:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

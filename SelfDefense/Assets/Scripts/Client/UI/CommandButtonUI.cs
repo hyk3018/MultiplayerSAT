@@ -22,11 +22,12 @@ namespace Client.UI
             _button = GetComponent<Button>();
         }
 
-        public void Initialise(CommandSensor commandSensor, CommandData commandData)
+        public void Initialise(CommandExecutor executor, CommandData commandData)
         {
             _button.onClick.AddListener(() =>
             {
-                commandSensor.RequestCommand(_currentCommandData);
+                Debug.Log("Button pressed!");
+                executor.ExecuteCommandServerRpc(_currentCommandData);
             });
         
             _currentCommandData = commandData;
@@ -38,7 +39,7 @@ namespace Client.UI
                 case CommandType.BUILD_MUSIC:
                     _image.sprite = commandImages[1];
                     break;
-                case CommandType.BUILD_JOKE:
+                case CommandType.BUILD_LAUGHTER:
                     _image.sprite = commandImages[2];
                     break;
                 default:

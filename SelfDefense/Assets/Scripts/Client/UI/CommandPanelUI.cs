@@ -14,8 +14,6 @@ namespace Client.UI
         [SerializeField]
         private GameObject commandButtonPrefab;
 
-        private CommandSensor m_commandSensor;
-
         private void Awake()
         {
             CommandSensor.CommandTypesChange += OnCommandTypesChange;
@@ -26,21 +24,19 @@ namespace Client.UI
             CommandSensor.CommandTypesChange -= OnCommandTypesChange;
         }
 
-        private void OnCommandTypesChange(List<CommandData> availableCommands)
+        private void OnCommandTypesChange(Dictionary<CommandExecutor, List<CommandData>> availableCommands)
         {
             transform.RemoveAllChildGameObjects();
 
-            foreach (CommandData commandData in availableCommands)
+            foreach (CommandExecutor executor in availableCommands.Keys)
             {
-                var go = Instantiate(commandButtonPrefab, transform);
-                var commandButton = go.GetComponent<CommandButtonUI>();
-                commandButton.Initialise(m_commandSensor, commandData);
+                foreach (CommandData commandData in availableCommands[executor])
+                {
+                    var go = Instantiate(commandButtonPrefab, transform);
+                    var commandButton = go.GetComponent<CommandButtonUI>();
+                    commandButton.Initialise(executor, commandData);
+                }
             }
-        }
-
-        public void Initialise(CommandSensor commandSensor)
-        {
-            m_commandSensor = commandSensor;
         }
     }
 }

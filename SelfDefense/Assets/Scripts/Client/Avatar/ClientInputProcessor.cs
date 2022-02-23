@@ -14,7 +14,7 @@ namespace Client.Avatar
     public struct ClientInputData : INetworkSerializable
     {
         public int Tick;
-        public ulong ClientID;
+        public ulong ClientId;
         public bool DoCommand;
         public Vector3 MoveTarget;
         public CommandData RequestedCommand;
@@ -22,7 +22,7 @@ namespace Client.Avatar
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref Tick);
-            serializer.SerializeValue(ref ClientID);
+            serializer.SerializeValue(ref ClientId);
             serializer.SerializeValue(ref DoCommand);
             serializer.SerializeValue(ref MoveTarget);
             RequestedCommand.NetworkSerialize(serializer);
@@ -91,7 +91,7 @@ namespace Client.Avatar
             // Populate input data
             var clientInputData = new ClientInputData()
             {
-                Tick = currentTick, ClientID = _networkPlayerState.OwnerClientId,
+                Tick = currentTick, ClientId = _networkPlayerState.OwnerClientId,
                 MoveTarget = new Vector3(_horizontalInput, _verticalInput, transform.position.z),
                 DoCommand = _commandRequested, RequestedCommand = _currentRequestedCommand
             };
@@ -131,7 +131,6 @@ namespace Client.Avatar
 
             if (positionError <= 0.1f) return;
 
-            Debug.Log("Needs correction");
             transform.position = _latestServerState.Position;
             _stateBuffer[serverStateBufferIndex] = _latestServerState;
 

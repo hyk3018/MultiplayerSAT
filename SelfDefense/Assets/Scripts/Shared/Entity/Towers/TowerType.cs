@@ -2,7 +2,7 @@
 {
     public enum TowerType
     {
-        TOY,
+        PLAY,
         MUSIC,
         LAUGHTER
     }

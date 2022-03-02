@@ -1,3 +1,4 @@
+using Client.UI;
 using Server;
 using TMPro;
 using UnityEngine;
@@ -6,10 +7,16 @@ using UnityEngine.UI;
 public class ReadyToggleUI : MonoBehaviour
 {
     [SerializeField]
-    private GameManager gameManager;
+    private ReadyListener readyListener;
 
     [SerializeField]
-    private TextMeshProUGUI readyText;
+    private TextMeshProUGUI readyTextObject;
+
+    [SerializeField]
+    private string readyText, notReadyText;
+
+    [SerializeField]
+    private Color readyColour, notReadyColour;
     
     private Button _button;
     private Image _image;
@@ -22,9 +29,9 @@ public class ReadyToggleUI : MonoBehaviour
         _button.onClick.AddListener(() =>
         {
             _ready = !_ready;
-            gameManager.SetReadyServerRpc(_ready);
-            _image.color = _ready ? new Color(0.4f, 0.94f, 0.34f) : new Color(0.94f, 0.32f, 0.32f);
-            readyText.text = _ready ? "Ready!" : "Click When Ready";
+            readyListener.SetReadyServerRpc(_ready);
+            _image.color = _ready ? readyColour : notReadyColour;
+            readyTextObject.text = _ready ? readyText : notReadyText;
         });
     }
 }

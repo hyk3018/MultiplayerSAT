@@ -135,9 +135,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   commandImages:
-  - {fileID: 21300000, guid: 9df9f2f6b4ca78e4a832ff60a403cace, type: 3}
-  - {fileID: 21300000, guid: 1f40e67ad7c0f3f448967a13ec54b819, type: 3}
-  - {fileID: 21300000, guid: ba2b1b724be03234e9f1c83a2a0c896e, type: 3}
+  - {fileID: 21300000, guid: 772f9b6f256c4bd4cb495808a3d48605, type: 3}
+  - {fileID: 21300000, guid: 0b9cd35c7a571ca478eddf36c195299f, type: 3}
+  - {fileID: 8876704071685849394, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}
+  buttonText: {fileID: 7931230426991881641}
 --- !u!1 &7073840146241603161
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,8 +213,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

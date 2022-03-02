@@ -1,4 +1,5 @@
 ﻿using System;
+using Client.UI;
 using Server.EnemySpawning;
 using TK.Core.Common;
 using Unity.Netcode;
@@ -9,13 +10,19 @@ namespace Server
     public class GameManager : Singleton<GameManager>
     {
         [SerializeField]
-        private GameObject playerSpawnPrefab;
+        private GameObject playerSpawnPrefab, childhoodSelfSpawnPrefab;
 
         [SerializeField]
         private int minReady;
 
         [SerializeField]
         private ServerEnemySpawner enemySpawner;
+
+        [SerializeField]
+        private ReadyListener joinGameReadyListener;
+
+        [SerializeField]
+        private Transform player1ChildhoodSelfSpawn, player2ChildhoodSelfSpawn;
         
         public event Action<int> Tick;
         public event Action<ulong, ulong> GameStarted;
@@ -23,16 +30,13 @@ namespace Server
         private float _timer;
         private int _currentTick;
         private float _tickPeriod;
-
-        public NetworkVariable<int> readyCount;
-        
         private bool _gameStarted;
 
         private void Awake()
         {
-            readyCount.OnValueChanged += StartGameIfReady;
+            joinGameReadyListener.readyCount.OnValueChanged += StartGameIfReady;
         }
-
+        
         private void StartGameIfReady(int value, int newValue)
         {
             if (!IsHost) return;
@@ -40,8 +44,21 @@ namespace Server
             {
                 foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
                 {
-                    var go = Instantiate(playerSpawnPrefab);
-                    go.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
+                    var playerGo = Instantiate(playerSpawnPrefab);
+                    playerGo.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
+
+                    var childhoodSelfGo = Instantiate(childhoodSelfSpawnPrefab);
+                    childhoodSelfGo.GetComponent<NetworkObject>().Spawn();
+                    if (clientId == NetworkManager.Singleton.LocalClientId)
+                    {
+                        playerGo.transform.position = player1ChildhoodSelfSpawn.position;
+                        childhoodSelfGo.transform.position = player1ChildhoodSelfSpawn.position;
+                    }
+                    else
+                    {
+                        playerGo.transform.position = player2ChildhoodSelfSpawn.position;
+                        childhoodSelfGo.transform.position = player2ChildhoodSelfSpawn.position;
+                    }
                 }
                 
                 var clientIds = NetworkManager.Singleton.ConnectedClientsIds;
@@ -49,15 +66,10 @@ namespace Server
                 var player2Id = clientIds.Count == 2 ? clientIds[1 - player1IdIndex] : 0;
 
                 StartGameAtTimeClientRpc(clientIds[player1IdIndex], player2Id);
-                enemySpawner.SpawnNextWave();
+                //enemySpawner.SpawnNextWave();
             }
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        public void SetReadyServerRpc(bool ready)
-        {
-            readyCount.Value = Mathf.Max(0, ready ? readyCount.Value + 1 : readyCount.Value - 1);
-        }
 
         [ClientRpc]
         private void StartGameAtTimeClientRpc(ulong player1Id, ulong player2Id)
@@ -81,16 +93,16 @@ namespace Server
             }
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        public void RetrieveStartingPlayerCountServerRpc()
-        {
-            SendStartingPlayerCountClientRpc();
-        }
-
-        [ClientRpc]
-        private void SendStartingPlayerCountClientRpc()
-        {
-            readyCount.OnValueChanged?.Invoke(readyCount.Value, readyCount.Value);
-        }
+        // [ServerRpc(RequireOwnership = false)]
+        // public void RetrieveStartingPlayerCountServerRpc()
+        // {
+        //     SendStartingPlayerCountClientRpc();
+        // }
+        //
+        // [ClientRpc]
+        // private void SendStartingPlayerCountClientRpc()
+        // {
+        //     joinGameReadyListener.readyCount.OnValueChanged?.Invoke(readyCount.Value, readyCount.Value);
+        // }
     }
 }

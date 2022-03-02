@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerPrefabs:
   - {fileID: 4355596652255708599, guid: 5901d0e9ebd142e499ad9d0501c86407, type: 3}
+  - {fileID: 4355596652255708599, guid: 1190d6a2da5c9944fb29e4ab8bf403d0, type: 3}
   towerTypes: 000000000100000002000000

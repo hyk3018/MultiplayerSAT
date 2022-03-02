@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ScriptableObjects.Towers
 {
-    [CreateAssetMenu(fileName = "TowerList", menuName = "MultiplayerSAT", order = 0)]
+    [CreateAssetMenu(fileName = "TowerList", menuName = "MultiplayerSAT/TowerList", order = 0)]
     public class TowerList : ScriptableObject
     {
         [SerializeField]

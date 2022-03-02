@@ -37,7 +37,7 @@ namespace Client.Commands.CommandPoints
             switch (commandData.CommandType)
             {
                 case CommandType.BUILD_TOY:
-                    tower = SpawnTower(TowerType.TOY);
+                    tower = SpawnTower(TowerType.PLAY);
                     break;
                 case CommandType.BUILD_MUSIC:
                     tower = SpawnTower(TowerType.MUSIC);

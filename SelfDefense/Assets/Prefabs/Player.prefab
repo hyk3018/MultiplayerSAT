@@ -13,10 +13,10 @@ GameObject:
   - component: {fileID: 4247183611389903681}
   - component: {fileID: -84898850331972779}
   - component: {fileID: 6387031557057214935}
-  - component: {fileID: 68101516472904256}
   - component: {fileID: -4530205293477470480}
   - component: {fileID: 91186529500034684}
   - component: {fileID: 4781286783635794595}
+  - component: {fileID: -7439378556199407342}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -33,7 +33,7 @@ Transform:
   m_GameObject: {fileID: 8654684128922175749}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 15, y: 15, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 476539463
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
+  m_Sprite: {fileID: 7480253659388534781, guid: 449f431c113165743adeaea8a4c9f71e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -129,22 +129,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc8ca8c852c94cef88cee3f1543ec6ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!58 &68101516472904256
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8654684128922175749}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5
 --- !u!114 &-4530205293477470480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,3 +190,19 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   CanCommitToTransform: 0
+--- !u!70 &-7439378556199407342
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8654684128922175749}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.06}
+  m_Size: {x: 0.16484204, y: 0.24845715}
+  m_Direction: 0

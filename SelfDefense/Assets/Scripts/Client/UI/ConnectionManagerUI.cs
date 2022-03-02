@@ -31,11 +31,14 @@ namespace Client.UI
         [SerializeField]
         private GameManager gameManager;
 
+        [SerializeField]
+        private ReadyListener joinGameReadyListener;
+
         public void Start()
         {
             startButton.onClick.AddListener(StartHost);
             joinButton.onClick.AddListener(Join);
-            gameManager.readyCount.OnValueChanged +=
+            joinGameReadyListener.readyCount.OnValueChanged +=
                 (oldValue, newValue) => playersReadyText.text = newValue.ToString();
             gameManager.GameStarted += (_,__) =>
             {
@@ -79,7 +82,7 @@ namespace Client.UI
 
         private void OnClientConnected(ulong clientId)
         {
-            gameManager.RetrieveStartingPlayerCountServerRpc();
+            //gameManager.RetrieveStartingPlayerCountServerRpc();
             readyStatusBar.SetActive(true);
             roomCodeText.text = joinCodeInput.text;
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;

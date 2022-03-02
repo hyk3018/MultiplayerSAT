@@ -178,6 +178,7 @@ GameObject:
   - component: {fileID: 3747032457788048982}
   - component: {fileID: 3747032457788048983}
   - component: {fileID: 3747032457788048977}
+  - component: {fileID: 6632196441984284028}
   m_Layer: 0
   m_Name: TowerSlot
   m_TagString: Untagged
@@ -311,3 +312,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OwnedPlayerIndex: 0
   OwnedByPlayer: 0
+--- !u!114 &6632196441984284028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3747032457788048939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  InLocalSpace: 0
+  Interpolate: 1
+  CanCommitToTransform: 0

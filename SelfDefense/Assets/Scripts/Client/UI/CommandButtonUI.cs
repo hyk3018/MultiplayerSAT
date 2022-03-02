@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Client.Avatar;
 using Client.Commands;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,9 @@ namespace Client.UI
         [SerializeField]
         private List<Sprite> commandImages;
 
+        [SerializeField]
+        private TextMeshProUGUI buttonText;
+        
         private Image _image;
         private Button _button;
         private CommandData _currentCommandData;
@@ -35,12 +39,15 @@ namespace Client.UI
             {
                 case CommandType.BUILD_TOY:
                     _image.sprite = commandImages[0];
+                    buttonText.text = "TOY TOWER";
                     break;
                 case CommandType.BUILD_MUSIC:
                     _image.sprite = commandImages[1];
+                    buttonText.text = "MUSIC TOWER";
                     break;
                 case CommandType.BUILD_LAUGHTER:
                     _image.sprite = commandImages[2];
+                    buttonText.text = "LAUGHTER TOWER";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(commandData), commandData, null);

@@ -39,20 +39,26 @@ namespace Client.Commands.CommandPoints
             switch (commandData.CommandType)
             {
                 case CommandType.WORK_GOAL:
-                    BuildingGoal?.Invoke();
-                    _buildingGoal = true;
-
-                    foreach (Animation animation in buildAnimations)
-                    {
-                        animation.gameObject.SetActive(true);
-                        animation.Play();
-                    }
-                    
-                    StartCoroutine(StopBuildingGoalAfterTime());
+                    WorkOnGoalClientRPC();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        [ClientRpc]
+        private void WorkOnGoalClientRPC()
+        {
+            BuildingGoal?.Invoke();
+            _buildingGoal = true;
+
+            foreach (Animation animation in buildAnimations)
+            {
+                animation.gameObject.SetActive(true);
+                animation.Play();
+            }
+
+            StartCoroutine(StopBuildingGoalAfterTime());
         }
 
         private IEnumerator StopBuildingGoalAfterTime()

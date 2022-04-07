@@ -17,3 +17,9 @@ MonoBehaviour:
   EffectiveMultiplier:
   - 1
   - 0.5
+  StatusThreshold: 0a0000000400000001000000
+  StatusDamage: 0100000001000000ffffffff
+  StatusSprites:
+  - {fileID: -4584719197186828235, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}
+  - {fileID: -107562068250393501, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}
+  - {fileID: 6524124437296137849, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}

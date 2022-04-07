@@ -10,6 +10,9 @@ namespace ScriptableObjects.Enemy
         public int MaxHealth;
         public List<TowerType> AffectedBy;
         public List<float> EffectiveMultiplier;
+        public List<int> StatusThreshold;
+        public List<int> StatusDamage;
+        public List<Sprite> StatusSprites;
 
         public bool IsTargetedBy(TowerType towerType)
         {

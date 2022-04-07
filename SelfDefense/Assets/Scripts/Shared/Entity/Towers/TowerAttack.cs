@@ -60,7 +60,7 @@ namespace Shared.Entity.Towers
         {
             if (!IsServer) return;
             var enemy = other.GetComponent<Enemy>();
-            if (enemy == null) return;
+            if (enemy == null || enemy.Status == EnemyStatus.POSITIVE) return;
 
             if (enemy.IsTargetedBy(towerStat.TowerType))
             {
@@ -82,12 +82,17 @@ namespace Shared.Entity.Towers
 
         private void RecalculateTarget()
         {
+            if (_currentTarget && _currentTarget.GetComponent<Enemy>().Status == EnemyStatus.POSITIVE)
+            {
+                _enemiesInRange.Remove(_currentTarget);
+            }
+            
             if (_enemiesInRange.Count == 0)
             {
                 ChangeTargetClientRpc(default);
                 return;
             }
-
+            
             if (_currentTarget == null || !_enemiesInRange.Contains(_currentTarget))
             {
                 ChangeTargetClientRpc(_enemiesInRange[0].GetComponent<NetworkObject>());
@@ -114,7 +119,8 @@ namespace Shared.Entity.Towers
                 return;
             
             var enemyHealth = _currentTarget.GetComponent<Health>();
-            if (enemyHealth.CurrentHealth.Value == 0)
+            var enemy = _currentTarget.GetComponent<Enemy>();
+            if (enemy.Status == EnemyStatus.POSITIVE)
             {
                 RecalculateTarget();
                 return;

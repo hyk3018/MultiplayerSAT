@@ -16,3 +16,9 @@ MonoBehaviour:
   AffectedBy: 01000000
   EffectiveMultiplier:
   - 1
+  StatusThreshold: 050000000300000001000000
+  StatusDamage: 0300000000000000fdffffff
+  StatusSprites:
+  - {fileID: -3903693708446669586, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}
+  - {fileID: -107562068250393501, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}
+  - {fileID: 3594733187379469396, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}

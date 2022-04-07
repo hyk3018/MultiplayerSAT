@@ -140,7 +140,7 @@ namespace Server
             var playerGoal = spawnData.IsHostPlayer ? player1Goal : player2Goal;
             playerGoal.Initialise(playableCharacters.Goals[spawnData.GoalIndex]);
 
-            if (!IsOwner) return;
+            if (!playerGo.IsOwner) return;
             
             var commandExecutor = playerGoal.GetComponent<GoalCommandExecutor>();
             commandExecutor.BuildingGoal += () =>

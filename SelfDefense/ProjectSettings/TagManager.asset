@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - ChildhoodSelf
   layers:
   - Default
   - TransparentFX
@@ -53,4 +54,7 @@ TagManager:
     locked: 0
   - name: Projectiles
     uniqueID: 2638476029
+    locked: 0
+  - name: Effects
+    uniqueID: 1114552669
     locked: 0

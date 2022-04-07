@@ -11,23 +11,20 @@ namespace Client.UI
     public class ConnectionManagerUI : MonoBehaviour
     {
         [SerializeField]
-        private Button startButton;
-
-        [SerializeField]
-        private Button joinButton;
+        private Button hostButton, joinButton;
 
         [SerializeField]
         private TMP_InputField joinCodeInput;
 
         [SerializeField]
-        private TMP_Text roomCodeText;
+        private TMP_Text roomCodeText, playersReadyText;
 
         [SerializeField]
-        private GameObject readyStatusBar;
+        private GameObject readyStatusBar, charSelectPanel, goalSelectPanel;
 
         [SerializeField]
-        private TMP_Text playersReadyText;
-        
+        private SpriteSelectionUI charSelectionUI, goalSelectionUI;
+
         [SerializeField]
         private GameManager gameManager;
 
@@ -36,7 +33,7 @@ namespace Client.UI
 
         public void Start()
         {
-            startButton.onClick.AddListener(StartHost);
+            hostButton.onClick.AddListener(StartHost);
             joinButton.onClick.AddListener(Join);
             joinGameReadyListener.readyCount.OnValueChanged +=
                 (oldValue, newValue) => playersReadyText.text = newValue.ToString();
@@ -45,6 +42,20 @@ namespace Client.UI
                 readyStatusBar.SetActive(false);
                 gameObject.SetActive(false);
                 
+            };
+
+            charSelectionUI.SelectionChanged += _ =>
+            {
+                gameManager.SetPlayerCustomizationServerRpc(NetworkManager.Singleton.LocalClientId,
+                    charSelectionUI.selectedIndex,
+                    goalSelectionUI.selectedIndex);
+            };
+            
+            goalSelectionUI.SelectionChanged += _ =>
+            {
+                gameManager.SetPlayerCustomizationServerRpc(NetworkManager.Singleton.LocalClientId,
+                    charSelectionUI.selectedIndex,
+                    goalSelectionUI.selectedIndex);
             };
         }
 
@@ -55,11 +66,11 @@ namespace Client.UI
                 var data = await RelayConnectionManager.Instance.SetupRelay();
                 roomCodeText.text = data.JoinCode;
             }
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
 
             if (NetworkManager.Singleton.StartHost())
             {
                 Debug.Log("Host started");
-                readyStatusBar.SetActive(true);
             }
             else
                 Debug.Log("Failed to host");
@@ -75,17 +86,23 @@ namespace Client.UI
             if (NetworkManager.Singleton.StartClient())
             {
                 Debug.Log("Client started");
+                roomCodeText.text = joinCodeInput.text;
             }
             else
                 Debug.Log("Failed to start client");
         }
-
+        
         private void OnClientConnected(ulong clientId)
         {
-            //gameManager.RetrieveStartingPlayerCountServerRpc();
-            readyStatusBar.SetActive(true);
-            roomCodeText.text = joinCodeInput.text;
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
+            
+            gameManager.RegisterListenToReadyUp();
+            joinButton.transform.parent.gameObject.SetActive(false);
+            hostButton.gameObject.SetActive(false);
+            roomCodeText.gameObject.SetActive(true);
+            charSelectPanel.SetActive(true);
+            goalSelectPanel.SetActive(true);
+            readyStatusBar.SetActive(true);
         }
 
         private IEnumerator SyncLobbyDataOnStart()

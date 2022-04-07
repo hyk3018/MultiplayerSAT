@@ -13,5 +13,17 @@ MonoBehaviour:
   m_Name: PlayableCharacters
   m_EditorClassIdentifier: 
   Sprites:
-  - Left: {fileID: -3163320555401944511, guid: 951c065558029ab4599c108a02921ebb, type: 3}
-    Right: {fileID: 0}
+  - Idle:
+    - {fileID: 9029284718794882426, guid: 951c065558029ab4599c108a02921ebb, type: 3}
+  - Idle:
+    - {fileID: -5606030244980005775, guid: 2889e6a60df476d4b8a170612c582933, type: 3}
+  - Idle:
+    - {fileID: 7854745691381881436, guid: 2b79778df2f51084ca9a3274bdfd4611, type: 3}
+  Goals:
+  - {fileID: 21300000, guid: 4605e88fb14b4704a8c917b7a9ef963d, type: 3}
+  - {fileID: 21300000, guid: 7c4c9e5a1613e414da2e2b3ea31fae96, type: 3}
+  - {fileID: 21300000, guid: f5d4b61118ca4694d8f5e3dabfab9c90, type: 3}
+  - {fileID: 21300000, guid: 461c9465a76c01f409498e9d86f92d62, type: 3}
+  - {fileID: 21300000, guid: a29dc6d05083fb343bb22715411cf487, type: 3}
+  - {fileID: 21300000, guid: f407cbf1b4402bf4684ffea6113af5c5, type: 3}
+  - {fileID: 21300000, guid: 4d9ac77bc57c1fb488aaad291261e054, type: 3}

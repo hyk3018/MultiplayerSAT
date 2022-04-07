@@ -52,12 +52,14 @@ namespace Client.Avatar
         private const int BUFFER_SIZE = 1024;
 
         private int tick;
+        private bool _inputBlocked;
 
         private void Awake()
         {
             _networkPlayerState = GetComponent<NetworkPlayerState>();
             _mainCamera = Camera.main;
-            
+
+            _inputBlocked = false;
             _stateBuffer = new StateData[BUFFER_SIZE];
             _inputBuffer = new ClientInputData[BUFFER_SIZE];
             
@@ -75,18 +77,11 @@ namespace Client.Avatar
         {
             _latestServerState = serverState;
         }
-
-        public void RequestCommand(CommandData requestedCommand)
-        {
-            if (_commandRequested) return;
-
-            _commandRequested = true;
-            _currentRequestedCommand = requestedCommand;
-        }
         
         private void HandleTick(int currentTick)
         {
             if (!_networkPlayerState.IsOwner) return;
+            if (_inputBlocked) return;
 
             // Populate input data
             var clientInputData = new ClientInputData()
@@ -149,6 +144,21 @@ namespace Client.Avatar
         {
             _horizontalInput = Input.GetAxis("Horizontal");
             _verticalInput = Input.GetAxis("Vertical");
+            //
+            // var normalizedInput = new Vector2(Input.GetAxis("Horizontal"),
+            //     Input.GetAxis("Vertical")).normalized;
+            // _horizontalInput = normalizedInput.x;
+            // _verticalInput = normalizedInput.y;
+        }
+
+        public void BlockInput()
+        {
+            _inputBlocked = true;
+        }
+
+        public void UnblockInput()
+        {
+            _inputBlocked = false;
         }
     }
 }

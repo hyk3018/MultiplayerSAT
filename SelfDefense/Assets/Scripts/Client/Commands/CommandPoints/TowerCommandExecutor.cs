@@ -13,20 +13,6 @@ namespace Client.Commands.CommandPoints
     {
         [SerializeField]
         private TowerList towerList;
-        
-        public override List<CommandData> GetAvailableCommands()
-        {
-            // Player can only do build commands for their own tower locations
-            if (!_playerOwner.OwnedByPlayer) return new List<CommandData>();
-
-            var commands = new List<CommandData>();
-            foreach (CommandType commandType in Enum.GetValues(typeof(CommandType)))
-            {
-                commands.Add(new CommandData(commandType, new []{NetworkObjectId}));
-            }
-
-            return commands;
-        }
 
         [ServerRpc(RequireOwnership = false)]
         public override void ExecuteCommandServerRpc(CommandData commandData)

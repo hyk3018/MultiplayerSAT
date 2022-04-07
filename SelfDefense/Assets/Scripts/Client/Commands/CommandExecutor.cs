@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Client.Commands
 {
+    [Serializable]
     public struct CommandData : INetworkSerializable
     {
         public CommandType CommandType;
@@ -46,7 +47,8 @@ namespace Client.Commands
     {
         BUILD_TOY,
         BUILD_MUSIC,
-        BUILD_LAUGHTER
+        BUILD_LAUGHTER,
+        WORK_GOAL,
     }
 
     [RequireComponent(typeof(PlayerOwnership))]

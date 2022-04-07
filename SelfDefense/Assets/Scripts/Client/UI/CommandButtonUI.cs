@@ -49,6 +49,10 @@ namespace Client.UI
                     _image.sprite = commandImages[2];
                     buttonText.text = "LAUGHTER TOWER";
                     break;
+                case CommandType.WORK_GOAL:
+                    _image.sprite = commandImages[3];
+                    buttonText.text = "WORK ON GOAL";
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(commandData), commandData, null);
             }

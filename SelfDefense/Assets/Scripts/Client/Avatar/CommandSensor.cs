@@ -49,7 +49,5 @@ namespace Client.Avatar
 
             return executorCommands;
         }
-
-        public void RequestCommand(CommandData commandData) => _clientInputProcessor.RequestCommand(commandData);
     }
 }

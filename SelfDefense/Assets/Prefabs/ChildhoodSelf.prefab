@@ -16,9 +16,10 @@ GameObject:
   - component: {fileID: 7670017905616044699}
   - component: {fileID: 4331837339174670857}
   - component: {fileID: 239450183159516615}
+  - component: {fileID: 6039579567515763853}
   m_Layer: 0
   m_Name: ChildhoodSelf
-  m_TagString: Untagged
+  m_TagString: ChildhoodSelf
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -114,8 +115,8 @@ Rigidbody2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3537365985669597608}
   m_BodyType: 1
-  m_Simulated: 0
-  m_UseFullKinematicContacts: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
@@ -196,6 +197,18 @@ MonoBehaviour:
   MaxHealth: 100
   CurrentHealth:
     m_InternalValue: 0
+--- !u!114 &6039579567515763853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3537365985669597608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 605514fef8e54da5b59ce9c30bb065ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7098370059251416791
 PrefabInstance:
   m_ObjectHideFlags: 0

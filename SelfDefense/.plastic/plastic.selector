@@ -1,0 +1,3 @@
+rep "SAT Multiplayer@ZoroMC@cloud"
+  path "/"
+    smartbranch "/main"

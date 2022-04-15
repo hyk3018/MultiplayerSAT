@@ -40,15 +40,15 @@ namespace Shared.Entity.Towers
             _health.HealthZero -= HandleDeathServerRpc;
         }
 
-        private void OnCollisionEnter2D(Collision2D other)
+        private void OnTriggerEnter2D(Collider2D other)
         {
             if (!IsOwner) return;
+
+            if (!other.CompareTag("ChildhoodSelf")) return;
             
-            if (other.gameObject.CompareTag("ChildhoodSelf"))
-            {
-                var damage = enemyData.StatusDamage[(int)Status];
-                other.gameObject.GetComponent<Health>().TakeDamageServerRpc(damage);
-            }
+            var damage = enemyData.StatusDamage[(int)Status];
+            other.gameObject.GetComponent<Health>().TakeDamageServerRpc(damage);
+            Destroy(gameObject);
         }
 
         public bool IsTargetedBy(TowerType towerType)

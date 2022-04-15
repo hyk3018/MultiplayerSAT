@@ -407,7 +407,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -449,6 +449,7 @@ MonoBehaviour:
   towerStat:
     AttackRate: 2
     AttackDamage: 5
+    TowerType: 0
   attackProjectile: {fileID: 908715140632109452, guid: 36112e50cb42a40448e0076a797c67cb, type: 3}
   projectileSpawnLocation: {fileID: 5864213068684813619}
   rotator: {fileID: 2947436127204131882}

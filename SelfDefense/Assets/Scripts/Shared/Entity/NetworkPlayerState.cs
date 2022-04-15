@@ -58,22 +58,6 @@ namespace Shared.Entity
         public void SubmitPlayerInputServerRpc(ClientInputData clientInputData)
         {
             _inputQueue.Enqueue(clientInputData);
-            return;
-            
-
-            if (!clientInputData.DoCommand) return;
-            switch (clientInputData.RequestedCommand.CommandType)
-            {
-                case CommandType.BUILD_TOY:
-                    Debug.Log("Build toy command requested");
-                    break;
-                case CommandType.BUILD_MUSIC:
-                    break;
-                case CommandType.BUILD_LAUGHTER:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
         }
 
         private void HandleTick(int tick)
@@ -98,7 +82,10 @@ namespace Shared.Entity
 
         public StateData ProcessInput(ClientInputData input)
         {
+            var bounds = GameManager.Instance.mapBounds.bounds;
             var newPos = transform.position + input.MoveTarget * MoveSpeed;
+            newPos.x = Mathf.Clamp(newPos.x, bounds.min.x, bounds.max.x);
+            newPos.y = Mathf.Clamp(newPos.y, bounds.min.y, bounds.max.y);
             
             return new StateData()
             {

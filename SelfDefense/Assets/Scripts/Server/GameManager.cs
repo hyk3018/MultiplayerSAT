@@ -58,7 +58,8 @@ namespace Server
 
         [SerializeField]
         private PlayableCharacters playableCharacters;
-        
+
+        public BoxCollider2D mapBounds;
         public event Action<int> Tick;
         public event Action<ulong, ulong> GameStarted;
 

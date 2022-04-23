@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Client.UI;
 using ScriptableObjects.Enemy;
 using Unity.Netcode;
 using UnityEngine;
@@ -23,8 +24,10 @@ namespace Shared.Entity.Towers
         private SpriteRenderer spriteRenderer;
 
         public EnemyStatus Status;
+        public event Action OnDeath;
         
         private Health _health;
+        private HealthBarUI _healthBarUI;
 
         private void Awake()
         {
@@ -37,6 +40,7 @@ namespace Shared.Entity.Towers
         public override void OnDestroy()
         {
             base.OnDestroy();
+            OnDeath?.Invoke();
             _health.HealthZero -= HandleDeathServerRpc;
         }
 
@@ -68,6 +72,10 @@ namespace Shared.Entity.Towers
             }
 
             spriteRenderer.sprite = enemyData.StatusSprites[(int)Status];
+            if (Status == EnemyStatus.POSITIVE)
+            {
+                _healthBarUI.Hide();
+            }
         }
 
         [ServerRpc]

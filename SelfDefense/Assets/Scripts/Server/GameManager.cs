@@ -9,6 +9,7 @@ using Shared.Entity;
 using TK.Core.Common;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Server
 {
@@ -35,6 +36,12 @@ namespace Server
             serializer.SerializeValue(ref IsHostPlayer);
         }
     }
+
+    public enum GameState
+    {
+        PREP,
+        PLAYING
+    }
     
     public class GameManager : Singleton<GameManager>
     {
@@ -48,11 +55,17 @@ namespace Server
         private ServerEnemySpawner enemySpawner;
 
         [SerializeField]
+        private Button StartNextWaveButton;
+
+        [SerializeField]
         private ReadyListener joinGameReadyListener;
 
         [SerializeField]
         private Transform player1ChildhoodSelfSpawn, player2ChildhoodSelfSpawn;
 
+        [SerializeField]
+        private PlayerUI player1UI, player2UI;
+        
         [SerializeField]
         private PlayerGoal player1Goal, player2Goal;
 
@@ -62,6 +75,7 @@ namespace Server
         public BoxCollider2D mapBounds;
         public event Action<int> Tick;
         public event Action<ulong, ulong> GameStarted;
+        public GameState GameState;
 
         private float _timer;
         private int _currentTick;
@@ -72,6 +86,24 @@ namespace Server
         private void Awake()
         {
             _playerCustomization = new Dictionary<ulong, Tuple<int, int>>();
+            GameState = GameState.PREP;
+
+            StartNextWaveButton.onClick.AddListener(() =>
+            {
+                StartNextWaveButton.gameObject.SetActive(false);
+                StartNextWaveServerRpc();
+            });
+            
+            enemySpawner.NoEnemiesRemaining += OnNoEnemiesRemainClientRpc;
+        }
+
+        [ClientRpc]
+        private void OnNoEnemiesRemainClientRpc(bool finishedGame)
+        {
+            GameState = GameState.PREP;
+            if (finishedGame) return;
+            
+            StartNextWaveButton.gameObject.SetActive(true);
         }
 
         public void RegisterListenToReadyUp()
@@ -105,8 +137,21 @@ namespace Server
                 }
 
                 StartGameAtTimeClientRpc(player1Id, player2Id);
-                enemySpawner.SpawnNextWave();
             }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void StartNextWaveServerRpc()
+        {
+            HideReadyButtonClientRpc();
+            enemySpawner.SpawnNextWave();
+            GameState = GameState.PLAYING;
+        }
+
+        [ClientRpc]
+        private void HideReadyButtonClientRpc()
+        {
+            StartNextWaveButton.gameObject.SetActive(false);
         }
 
         private void InitialisePlayerGame(PlayerSpawnData spawnData)
@@ -141,6 +186,15 @@ namespace Server
             var playerGoal = spawnData.IsHostPlayer ? player1Goal : player2Goal;
             playerGoal.Initialise(playableCharacters.Goals[spawnData.GoalIndex]);
 
+            var playerUI = spawnData.IsHostPlayer ? player1UI : player2UI;
+            playerUI.Initialise(playerGo, childhoodSelfGo, playerGoal);
+            
+            player1UI.gameObject.SetActive(true);
+            player2UI.gameObject.SetActive(true);
+            
+            
+            // Code specific to owner object
+            
             if (!playerGo.IsOwner) return;
             
             var commandExecutor = playerGoal.GetComponent<GoalCommandExecutor>();
@@ -174,6 +228,8 @@ namespace Server
         private void StartGameAtTimeClientRpc(ulong player1Id, ulong player2Id)
         {
             Debug.Log("Game start");
+            
+            StartNextWaveButton.gameObject.SetActive(true);
             
             _currentTick = NetworkManager.LocalTime.Tick;
             _gameStarted = true;

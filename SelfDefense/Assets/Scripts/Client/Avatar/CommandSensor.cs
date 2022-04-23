@@ -32,7 +32,9 @@ namespace Client.Avatar
             if (!IsOwner) return;
             
             var commandPoints = other.gameObject.GetComponents<CommandExecutor>();
-            var commands = GetCommandsFromCommandPoints(commandPoints);
+
+            if (commandPoints == null || commandPoints.Length == 0) return;
+            
             CommandTypesChange?.Invoke(new Dictionary<CommandExecutor, List<CommandData>>());
         }
 

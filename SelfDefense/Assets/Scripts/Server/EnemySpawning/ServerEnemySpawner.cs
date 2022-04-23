@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Server.Movement;
+using Shared.Entity.Towers;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -12,8 +14,11 @@ namespace Server.EnemySpawning
         [SerializeField]
         private List<WaveData> waves;
 
+        public event Action<bool> NoEnemiesRemaining;
+
         private Dictionary<GameObject, List<Vector3>> PathVectors;
         private int _nextWave;
+        private int _enemiesInCurrentWave;
 
         private void Awake()
         {
@@ -23,11 +28,18 @@ namespace Server.EnemySpawning
         public void SpawnNextWave()
         {
             var nextWave = waves[_nextWave];
-
+            _enemiesInCurrentWave = CalculateEnemyCount(nextWave);
             foreach (var batch in nextWave.Batches)
             {
                 StartCoroutine(SpawnBatch(batch));
             }
+
+            _nextWave++;
+        }
+
+        private int CalculateEnemyCount(WaveData nextWave)
+        {
+            return nextWave.Batches.Select(batch => batch.Amount).Sum();
         }
 
         private IEnumerator SpawnBatch(WaveBatchData batch)
@@ -82,6 +94,14 @@ namespace Server.EnemySpawning
             }
             
             go.GetComponent<NetworkObject>().Spawn();
+            go.GetComponent<Enemy>().OnDeath += () =>
+            {
+                _enemiesInCurrentWave--;
+                if (_enemiesInCurrentWave == 0)
+                {
+                    NoEnemiesRemaining?.Invoke(_nextWave == waves.Count);
+                }
+            };
 
             return true;
         }

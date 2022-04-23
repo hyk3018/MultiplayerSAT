@@ -13,12 +13,28 @@ namespace Client.UI
         [SerializeField]
         private Health health;
 
+        public void Initialise(Health healthComponent)
+        {
+            health = healthComponent;
+            health.CurrentHealth.OnValueChanged += OnCurrentHealthChanged;
+            OnCurrentHealthChanged(health.MaxHealth, health.MaxHealth);
+        }
+        
         private void Awake()
         {
-            health.CurrentHealth.OnValueChanged += (value, newValue) =>
-            {
-                healthBar.fillAmount = (float) newValue / health.MaxHealth;
-            };
+            if (!health) return;
+
+            health.CurrentHealth.OnValueChanged += OnCurrentHealthChanged;
+        }
+
+        private void OnCurrentHealthChanged(int value, int newValue)
+        {
+            healthBar.fillAmount = (float) newValue / health.MaxHealth;
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

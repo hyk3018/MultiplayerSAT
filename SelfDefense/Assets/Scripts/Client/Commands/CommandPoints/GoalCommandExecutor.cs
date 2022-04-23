@@ -58,6 +58,7 @@ namespace Client.Commands.CommandPoints
                 animation.Play();
             }
 
+            _playerGoal.GetComponent<AudioSource>().Play();
             StartCoroutine(StopBuildingGoalAfterTime());
         }
 

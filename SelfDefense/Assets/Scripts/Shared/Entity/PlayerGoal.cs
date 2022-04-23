@@ -1,4 +1,5 @@
 ﻿using System;
+using Server;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -15,7 +16,10 @@ namespace Shared.Entity
         [SerializeField]
         private Transform revealMaskTransform, revealStart, revealEnd;
 
+        public AudioClip GoalSound;
+
         public float buildTime;
+        public event Action<float> GoalIncremented;
         
         private float _goalProgress;
 
@@ -30,6 +34,7 @@ namespace Shared.Entity
             _goalProgress = Math.Min(_goalProgress + goalIncrementStep, 1f);
             revealMaskTransform.position = Vector3.Lerp(revealStart.position, 
                 revealEnd.position, _goalProgress);
+            GoalIncremented?.Invoke(_goalProgress);
         }
     }
 }

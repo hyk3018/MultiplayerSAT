@@ -11,21 +11,42 @@ namespace Shared.Entity
 
         public NetworkVariable<int> Points;
 
-        private void Start()
+        public override void OnNetworkSpawn()
         {
+            base.OnNetworkSpawn();
             Points.Value = affectionPointsStart;
         }
-
+        
         private void Update()
         {
+            if (!IsOwner) return;
+            
             if (Input.GetKeyDown(KeyCode.U))
             {
-                Points.Value = Points.Value + 1;
+                IncreasePointsServerRpc();
             }
             else if (Input.GetKeyDown(KeyCode.I))
             {
-                Points.Value = Points.Value - 1;
+                DecreasePointsServerRpc();
             }
+        }
+
+        [ServerRpc]
+        private void DecreasePointsServerRpc()
+        {
+            Points.Value = Points.Value - 1;
+        }
+
+        [ServerRpc]
+        private void IncreasePointsServerRpc()
+        {
+            Points.Value = Points.Value + 1;
+        }
+
+        [ServerRpc]
+        public void SpendPointsServerRpc(int commandCost)
+        {
+            Points.Value -= commandCost;
         }
     }
 }

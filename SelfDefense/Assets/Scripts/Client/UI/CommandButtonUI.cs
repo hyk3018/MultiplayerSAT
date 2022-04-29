@@ -48,8 +48,8 @@ namespace Client.UI
 
                 if (_affectionPoints)
                 {
-                    _affectionPoints.Points.Value -=
-                        Commands.CommandTypeMap[_currentCommandExecutionData.CommandType].CommandCost;
+                    _affectionPoints.SpendPointsServerRpc(Commands
+                        .CommandTypeMap[_currentCommandExecutionData.CommandType].CommandCost);
                 }
             });
         

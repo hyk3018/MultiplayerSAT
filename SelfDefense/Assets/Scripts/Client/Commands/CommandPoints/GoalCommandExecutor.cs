@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using ScriptableObjects.Player;
 using Shared.Entity;
 using Shared.Entity.Towers;
 using Unity.Netcode;

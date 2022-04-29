@@ -76,6 +76,7 @@ namespace Server
         public event Action<int> Tick;
         public event Action<ulong, ulong> GameStarted;
         public GameState GameState;
+        public NetworkObject LocalPlayer;
 
         private float _timer;
         private int _currentTick;
@@ -196,7 +197,8 @@ namespace Server
             // Code specific to owner object
             
             if (!playerGo.IsOwner) return;
-            
+
+            LocalPlayer = playerGo;
             var commandExecutor = playerGoal.GetComponent<GoalCommandExecutor>();
             commandExecutor.BuildingGoal += () =>
             {

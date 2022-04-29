@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36b69e0ae71849d2898243c98624ebfe, type: 3}
+  m_Name: Commands
+  m_EditorClassIdentifier: 
+  AllCommands:
+  - CommandType: 0
+    CommandName: Toy Tower
+    CommandImage: {fileID: 21300000, guid: 772f9b6f256c4bd4cb495808a3d48605, type: 3}
+    CommandTooltip: 
+    CommandCost: 5
+  - CommandType: 1
+    CommandName: Music Tower
+    CommandImage: {fileID: 21300000, guid: 0b9cd35c7a571ca478eddf36c195299f, type: 3}
+    CommandTooltip: 
+    CommandCost: 5
+  - CommandType: 2
+    CommandName: Laughter Tower
+    CommandImage: {fileID: 8876704071685849394, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}
+    CommandTooltip: 
+    CommandCost: 5
+  - CommandType: 3
+    CommandName: Work On Goal
+    CommandImage: {fileID: 21300000, guid: b517413f3caf810478ad39bfbab22e8a, type: 3}
+    CommandTooltip: 
+    CommandCost: 5

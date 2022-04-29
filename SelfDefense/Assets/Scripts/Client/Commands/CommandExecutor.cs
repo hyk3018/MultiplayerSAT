@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ScriptableObjects.Player;
 using Shared.Entity;
 using Unity.Netcode;
 using UnityEngine;
@@ -41,14 +42,6 @@ namespace Client.Commands
                 serializer.SerializeValue(ref TargetIds[i]);
             }
         }
-    }
-    
-    public enum CommandType
-    {
-        BUILD_TOY,
-        BUILD_MUSIC,
-        BUILD_LAUGHTER,
-        WORK_GOAL,
     }
 
     [RequireComponent(typeof(PlayerOwnership))]

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ScriptableObjects.Player;
 using ScriptableObjects.Towers;
 using Shared.Entity;
 using Shared.Entity.Towers;

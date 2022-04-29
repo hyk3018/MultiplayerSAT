@@ -25,18 +25,18 @@ namespace Client.Commands.CommandPoints
             _playerGoal = GetComponent<PlayerGoal>();
         }
 
-        public override List<CommandData> GetAvailableCommands()
+        public override List<CommandExecutionData> GetAvailableCommands()
         {
             if (_buildingGoal)
-                return new List<CommandData>();
+                return new List<CommandExecutionData>();
             
             return base.GetAvailableCommands();
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public override void ExecuteCommandServerRpc(CommandData commandData)
+        public override void ExecuteCommandServerRpc(CommandExecutionData commandExecutionData)
         {
-            switch (commandData.CommandType)
+            switch (commandExecutionData.CommandType)
             {
                 case CommandType.WORK_GOAL:
                     WorkOnGoalClientRPC();

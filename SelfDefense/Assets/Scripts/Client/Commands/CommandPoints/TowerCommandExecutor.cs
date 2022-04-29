@@ -15,12 +15,12 @@ namespace Client.Commands.CommandPoints
         private TowerList towerList;
 
         [ServerRpc(RequireOwnership = false)]
-        public override void ExecuteCommandServerRpc(CommandData commandData)
+        public override void ExecuteCommandServerRpc(CommandExecutionData commandExecutionData)
         {
             Debug.Log("Execute!");
             
             GameObject tower;
-            switch (commandData.CommandType)
+            switch (commandExecutionData.CommandType)
             {
                 case CommandType.BUILD_TOY:
                     tower = SpawnTower(TowerType.PLAY);

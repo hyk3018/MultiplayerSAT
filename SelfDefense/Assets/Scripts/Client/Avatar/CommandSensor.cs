@@ -8,9 +8,9 @@ namespace Client.Avatar
 {
     public class CommandSensor : NetworkBehaviour
     {
-        public static event Action<Dictionary<CommandExecutor, List<CommandData>>> CommandTypesChange;
+        public static event Action<Dictionary<CommandExecutor, List<CommandExecutionData>>> CommandTypesChange;
         private ClientInputProcessor _clientInputProcessor;
-        private Dictionary<CommandExecutor, List<CommandData>> _currentCommandData;
+        private Dictionary<CommandExecutor, List<CommandExecutionData>> _currentCommandData;
 
         private void Awake()
         {
@@ -35,16 +35,16 @@ namespace Client.Avatar
 
             if (commandPoints == null || commandPoints.Length == 0) return;
             
-            CommandTypesChange?.Invoke(new Dictionary<CommandExecutor, List<CommandData>>());
+            CommandTypesChange?.Invoke(new Dictionary<CommandExecutor, List<CommandExecutionData>>());
         }
 
-        private static Dictionary<CommandExecutor, List<CommandData>> GetCommandsFromCommandPoints(CommandExecutor[] commandExecutors)
+        private static Dictionary<CommandExecutor, List<CommandExecutionData>> GetCommandsFromCommandPoints(CommandExecutor[] commandExecutors)
         {
-            var executorCommands = new Dictionary<CommandExecutor, List<CommandData>>();
+            var executorCommands = new Dictionary<CommandExecutor, List<CommandExecutionData>>();
 
             foreach (CommandExecutor commandExecutor in commandExecutors)
             {
-                var commands = new List<CommandData>();
+                var commands = new List<CommandExecutionData>();
                 commands.AddRange(commandExecutor.GetAvailableCommands());
                 executorCommands.Add(commandExecutor, commands);
             }

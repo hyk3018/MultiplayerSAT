@@ -7,12 +7,12 @@ using UnityEngine;
 namespace Client.Commands
 {
     [Serializable]
-    public struct CommandData : INetworkSerializable
+    public struct CommandExecutionData : INetworkSerializable
     {
         public CommandType CommandType;
         public ulong[] TargetIds;
 
-        public CommandData(CommandType commandType, ulong[] targetIds)
+        public CommandExecutionData(CommandType commandType, ulong[] targetIds)
         {
             CommandType = commandType;
             TargetIds = targetIds;
@@ -55,7 +55,7 @@ namespace Client.Commands
     public class CommandExecutor : NetworkBehaviour
     {
         [SerializeField]
-        private List<CommandData> configuredCommandTypes;
+        private List<CommandExecutionData> configuredCommandTypes;
 
         protected PlayerOwnership _playerOwner;
 
@@ -64,14 +64,14 @@ namespace Client.Commands
             _playerOwner = GetComponent<PlayerOwnership>();
         }
 
-        public virtual List<CommandData> GetAvailableCommands()
+        public virtual List<CommandExecutionData> GetAvailableCommands()
         {
-            if (!_playerOwner.OwnedByPlayer) return new List<CommandData>();
+            if (!_playerOwner.OwnedByPlayer) return new List<CommandExecutionData>();
             return configuredCommandTypes;
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public virtual void ExecuteCommandServerRpc(CommandData commandData)
+        public virtual void ExecuteCommandServerRpc(CommandExecutionData commandExecutionData)
         {
             return;
         }

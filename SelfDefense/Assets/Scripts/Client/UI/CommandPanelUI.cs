@@ -25,14 +25,14 @@ namespace Client.UI
             CommandSensor.CommandTypesChange -= OnCommandTypesChange;
         }
 
-        private void OnCommandTypesChange(Dictionary<CommandExecutor, List<CommandData>> availableCommands)
+        private void OnCommandTypesChange(Dictionary<CommandExecutor, List<CommandExecutionData>> availableCommands)
         {
             transform.RemoveAllChildGameObjects();
             gameObject.SetActive(false);
             var setActive = false;
             foreach (CommandExecutor executor in availableCommands.Keys)
             {
-                foreach (CommandData commandData in availableCommands[executor])
+                foreach (CommandExecutionData commandData in availableCommands[executor])
                 {
                     if (!setActive)
                     {

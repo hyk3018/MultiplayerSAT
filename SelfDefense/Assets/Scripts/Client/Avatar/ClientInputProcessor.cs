@@ -17,7 +17,7 @@ namespace Client.Avatar
         public ulong ClientId;
         public bool DoCommand;
         public Vector3 MoveTarget;
-        public CommandData RequestedCommand;
+        public CommandExecutionData RequestedCommandExecution;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
@@ -25,7 +25,7 @@ namespace Client.Avatar
             serializer.SerializeValue(ref ClientId);
             serializer.SerializeValue(ref DoCommand);
             serializer.SerializeValue(ref MoveTarget);
-            RequestedCommand.NetworkSerialize(serializer);
+            RequestedCommandExecution.NetworkSerialize(serializer);
         }
     }
 
@@ -39,7 +39,7 @@ namespace Client.Avatar
     {
         private bool _moveRequested;
         private bool _commandRequested;
-        private CommandData _currentRequestedCommand;
+        private CommandExecutionData _currentRequestedCommandExecution;
         private NetworkPlayerState _networkPlayerState;
         private Camera _mainCamera;
 
@@ -88,7 +88,7 @@ namespace Client.Avatar
             {
                 Tick = currentTick, ClientId = _networkPlayerState.OwnerClientId,
                 MoveTarget = new Vector3(_horizontalInput, _verticalInput, transform.position.z),
-                DoCommand = _commandRequested, RequestedCommand = _currentRequestedCommand
+                DoCommand = _commandRequested, RequestedCommandExecution = _currentRequestedCommandExecution
             };
             
             if (NetworkManager.Singleton.IsHost)

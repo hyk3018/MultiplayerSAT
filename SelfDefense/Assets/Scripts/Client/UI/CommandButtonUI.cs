@@ -4,6 +4,7 @@ using Client.Avatar;
 using Client.Commands;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Client.UI
@@ -18,7 +19,7 @@ namespace Client.UI
         
         private Image _image;
         private Button _button;
-        private CommandData _currentCommandData;
+        private CommandExecutionData _currentCommandExecutionData;
 
         private void Awake()
         {
@@ -26,16 +27,16 @@ namespace Client.UI
             _button = GetComponent<Button>();
         }
 
-        public void Initialise(CommandExecutor executor, CommandData commandData)
+        public void Initialise(CommandExecutor executor, CommandExecutionData commandExecutionData)
         {
             _button.onClick.AddListener(() =>
             {
                 Debug.Log("Button pressed!");
-                executor.ExecuteCommandServerRpc(_currentCommandData);
+                executor.ExecuteCommandServerRpc(_currentCommandExecutionData);
             });
         
-            _currentCommandData = commandData;
-            switch (commandData.CommandType)
+            _currentCommandExecutionData = commandExecutionData;
+            switch (commandExecutionData.CommandType)
             {
                 case CommandType.BUILD_TOY:
                     _image.sprite = commandImages[0];
@@ -54,7 +55,7 @@ namespace Client.UI
                     buttonText.text = "WORK ON GOAL";
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(commandData), commandData, null);
+                    throw new ArgumentOutOfRangeException(nameof(commandExecutionData), commandExecutionData, null);
             }
         }
     }

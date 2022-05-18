@@ -82,6 +82,7 @@ namespace Shared.Entity
 
         public StateData ProcessInput(ClientInputData input)
         {
+            FaceMovementDirectionClientRpc(input.MoveTarget.x);
             var bounds = GameManager.Instance.mapBounds.bounds;
             var newPos = transform.position + input.MoveTarget * MoveSpeed;
             newPos.x = Mathf.Clamp(newPos.x, bounds.min.x, bounds.max.x);
@@ -92,6 +93,19 @@ namespace Shared.Entity
                 Tick = input.Tick,
                 Position = newPos
             };
+        }
+
+        [ClientRpc]
+        private void FaceMovementDirectionClientRpc(float moveTargetX)
+        {
+            if (moveTargetX > 0)
+            {
+                GetComponent<SpriteRenderer>().flipX = false;
+            }
+            else if (moveTargetX < 0)
+            {
+                GetComponent<SpriteRenderer>().flipX = true;
+            }
         }
     }
 }

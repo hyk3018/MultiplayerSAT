@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc8b98e9b59cd524ba894a9d5de14426, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0.08
+  MoveSpeed: 0.08
 --- !u!114 &4048804875825101559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -143,7 +143,7 @@ MonoBehaviour:
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
   InLocalSpace: 0
-  Interpolate: 1
+  Interpolate: 0
   CanCommitToTransform: 0
 --- !u!58 &-505483878936840496
 CircleCollider2D:
@@ -175,6 +175,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyData: {fileID: 11400000, guid: 3a89f01fcd7b1d147adf58cc2a4db912, type: 2}
   spriteRenderer: {fileID: 7012916779446070900}
+  _healthBarUI: {fileID: 9093538165321595359}
   Status: 0
 --- !u!114 &-6082082471853553093
 MonoBehaviour:
@@ -305,6 +306,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1784175518562821033, guid: a7ad08b9e6c995749b072b9e02b04351, type: 3}
   m_PrefabInstance: {fileID: 7077493302820502116}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9093538165321595359 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2020693882221691835, guid: a7ad08b9e6c995749b072b9e02b04351, type: 3}
+  m_PrefabInstance: {fileID: 7077493302820502116}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba1d73c00e7d43eebe1eff3f93624752, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5963833432100805838 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3529560149916509866, guid: a7ad08b9e6c995749b072b9e02b04351, type: 3}

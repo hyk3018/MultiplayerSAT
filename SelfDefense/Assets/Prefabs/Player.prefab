@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2970211097
+  GlobalObjectIdHash: 951099334
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
@@ -232,6 +232,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c42a3f99881d449e93871012a22e55e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  affectionPointsStart: 20
+  affectionPointsStart: 5
   Points:
     m_InternalValue: 0

@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace ScriptableObjects.Player
 {
     [Serializable]
     public struct CharacterSpriteData
     {
+        [FormerlySerializedAs("Idle")]
         [SerializeField]
-        public List<Sprite> Idle;
+        public Sprite Right;
+
+        [SerializeField]
+        public Sprite Left;
     }
     
     [CreateAssetMenu(fileName = "PlayableCharacters", menuName = "MultiplayerSAT/PlayableCharacters", order = 0)]

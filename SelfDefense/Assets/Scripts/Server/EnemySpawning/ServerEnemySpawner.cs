@@ -5,6 +5,7 @@ using System.Linq;
 using Server.Movement;
 using Shared.Entity.Towers;
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
 
 namespace Server.EnemySpawning
@@ -17,7 +18,7 @@ namespace Server.EnemySpawning
         public event Action<bool> NoEnemiesRemaining;
 
         private Dictionary<GameObject, List<Vector3>> PathVectors;
-        private int _nextWave;
+        private NetworkVariable<int> _nextWave;
         private int _enemiesInCurrentWave;
 
         private void Awake()
@@ -27,14 +28,14 @@ namespace Server.EnemySpawning
 
         public void SpawnNextWave()
         {
-            var nextWave = waves[_nextWave];
+            var nextWave = waves[_nextWave.Value];
             _enemiesInCurrentWave = CalculateEnemyCount(nextWave);
             foreach (var batch in nextWave.Batches)
             {
                 StartCoroutine(SpawnBatch(batch));
             }
 
-            _nextWave++;
+            _nextWave.Value++;
         }
 
         private int CalculateEnemyCount(WaveData nextWave)
@@ -99,7 +100,7 @@ namespace Server.EnemySpawning
                 _enemiesInCurrentWave--;
                 if (_enemiesInCurrentWave == 0)
                 {
-                    NoEnemiesRemaining?.Invoke(_nextWave == waves.Count);
+                    NoEnemiesRemaining?.Invoke(_nextWave.Value == waves.Count);
                 }
             };
 
@@ -121,5 +122,11 @@ namespace Server.EnemySpawning
 
             return path;
         }
+
+        public string GetNextSpawnPrompt()
+        {
+            return waves[_nextWave.Value].Prompt;
+        }
     }
+
 }

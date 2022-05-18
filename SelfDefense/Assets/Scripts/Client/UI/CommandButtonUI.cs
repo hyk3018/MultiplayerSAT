@@ -49,7 +49,7 @@ namespace Client.UI
                 if (_affectionPoints)
                 {
                     _affectionPoints.SpendPointsServerRpc(Commands
-                        .CommandTypeMap[_currentCommandExecutionData.CommandType].CommandCost);
+                        .CommandTypeMap[_currentCommandExecutionData.CommandType].Cost);
                 }
             });
         
@@ -62,15 +62,18 @@ namespace Client.UI
             OnAffectionChange(_affectionPoints.Points.Value, _affectionPoints.Points.Value);
             _affectionPoints.Points.OnValueChanged += OnAffectionChange;
             
-            _image.sprite = command.CommandImage;
-            buttonText.text = command.CommandName;
-            affectionCostText.text = command.CommandCost.ToString();
+            _image.sprite = command.Image;
+            buttonText.text = command.Name;
+            affectionCostText.text = command.Cost.ToString();
+
+            var tooltipTrigger = GetComponent<TooltipTriggerUI>();
+            tooltipTrigger.Initialise(command.Tooltip, command.Image);
         }
         
         void OnAffectionChange(int value, int newValue)
         {
             var command = Commands.CommandTypeMap[_currentCommandExecutionData.CommandType];
-            if (command.CommandCost > newValue)
+            if (command.Cost > newValue)
             {
                 _button.enabled = false;
                 affordabilityMask.SetActive(true);

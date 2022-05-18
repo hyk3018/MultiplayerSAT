@@ -13,6 +13,7 @@ namespace ScriptableObjects.Enemy
         public List<int> StatusThreshold;
         public List<int> StatusDamage;
         public List<Sprite> StatusSprites;
+        public int AffectionReward;
 
         public bool IsTargetedBy(TowerType towerType)
         {

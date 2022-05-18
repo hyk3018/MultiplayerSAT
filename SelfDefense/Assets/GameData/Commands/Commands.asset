@@ -13,23 +13,41 @@ MonoBehaviour:
   m_Name: Commands
   m_EditorClassIdentifier: 
   AllCommands:
-  - CommandType: 0
-    CommandName: Toy Tower
-    CommandImage: {fileID: 21300000, guid: 772f9b6f256c4bd4cb495808a3d48605, type: 3}
-    CommandTooltip: 
-    CommandCost: 5
-  - CommandType: 1
-    CommandName: Music Tower
-    CommandImage: {fileID: 21300000, guid: 0b9cd35c7a571ca478eddf36c195299f, type: 3}
-    CommandTooltip: 
-    CommandCost: 5
-  - CommandType: 2
-    CommandName: Laughter Tower
-    CommandImage: {fileID: 8876704071685849394, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}
-    CommandTooltip: 
-    CommandCost: 5
-  - CommandType: 3
-    CommandName: Work On Goal
-    CommandImage: {fileID: 21300000, guid: b517413f3caf810478ad39bfbab22e8a, type: 3}
-    CommandTooltip: 
-    CommandCost: 5
+  - Type: 0
+    Name: Play Tower
+    Image: {fileID: 21300000, guid: 772f9b6f256c4bd4cb495808a3d48605, type: 3}
+    Tooltip: The adult self connects with the childhood self by playing games with
+      them. Play can drive creativity and help deal with emotions like boredom.
+    Cost: 5
+  - Type: 1
+    Name: Music Tower
+    Image: {fileID: 21300000, guid: 0b9cd35c7a571ca478eddf36c195299f, type: 3}
+    Tooltip: The adult self connects with the childhood self through music. Imagine
+      yourself playing music to your childhood self. Happy or upbeat music can have
+      a calming effect and help deal with emotions like anger.
+    Cost: 5
+  - Type: 2
+    Name: Laughter Tower
+    Image: {fileID: 8876704071685849394, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}
+    Tooltip: The adult self connects with the childhood self through laughter. Laughing
+      can help us deal with our negative memories and view them in better light.
+    Cost: 15
+  - Type: 3
+    Name: Personal Goal
+    Image: {fileID: 21300000, guid: b517413f3caf810478ad39bfbab22e8a, type: 3}
+    Tooltip: Work on your personal goal. This takes time away from dealing with incoming
+      emotions.
+    Cost: 15
+  - Type: 4
+    Name: Childhood Games
+    Image: {fileID: 21300000, guid: 772f9b6f256c4bd4cb495808a3d48605, type: 3}
+    Tooltip: Imagine playing your childhood games with your childhood self. The games
+      you used to enjoy can have a stronger impact  on emotions as they bring a sense
+      of nostalgia and familiarity.
+    Cost: 5
+  - Type: 5
+    Name: Love Song
+    Image: {fileID: 21300000, guid: bfb05bd29c370ea4dac18f15df26ae53, type: 3}
+    Tooltip: Singing love songs to your childhood self can build an even stronger
+      relationship with them and develop a deep emotional bond.
+    Cost: 10

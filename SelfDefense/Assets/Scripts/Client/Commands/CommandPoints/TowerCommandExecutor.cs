@@ -26,8 +26,14 @@ namespace Client.Commands.CommandPoints
                 case CommandType.BUILD_TOY:
                     tower = SpawnTower(TowerType.PLAY);
                     break;
+                case CommandType.UPGRADE_TOY_CHILDHOOD:
+                    tower = SpawnTower(TowerType.PLAY_CHILDHOOD);
+                    break;
                 case CommandType.BUILD_MUSIC:
                     tower = SpawnTower(TowerType.MUSIC);
+                    break;
+                case CommandType.UPGRADE_MUSIC_LOVESONG:
+                    tower = SpawnTower(TowerType.MUSIC_LOVESONG);
                     break;
                 case CommandType.BUILD_LAUGHTER:
                     tower = SpawnTower(TowerType.LAUGHTER);
@@ -55,15 +61,6 @@ namespace Client.Commands.CommandPoints
             var go = Instantiate(toyPrefab);
             go.transform.position = transform.position;
             
-            var playerOwnership = go.GetComponent<PlayerOwnership>();
-            if (playerOwnership == null)
-            {
-                Debug.Log("PlayerOwnership component not found in tower prefab.");
-                return null;
-            }
-            playerOwnership.OwnedPlayerIndex = _playerOwner.OwnedPlayerIndex;
-            playerOwnership.OwnedByPlayer = _playerOwner.OwnedByPlayer;
-            
             var networkObject = go.GetComponent<NetworkObject>();
             if (networkObject == null)
             {
@@ -71,8 +68,26 @@ namespace Client.Commands.CommandPoints
                 return null;
             }
             networkObject.Spawn();
-
+            
+            InitialiseTowerOwnershipClientRpc(networkObject);
+            
             return go;
+        }
+
+        [ClientRpc]
+        private void InitialiseTowerOwnershipClientRpc(NetworkObjectReference networkObjectReference)
+        {
+            if (networkObjectReference.TryGet(out NetworkObject networkObject))
+            {
+                var playerOwnership = networkObject.GetComponent<PlayerOwnership>();
+                if (playerOwnership == null)
+                {
+                    Debug.Log("PlayerOwnership component not found in tower prefab.");
+                    return;
+                }
+                playerOwnership.OwnedPlayerIndex = _playerOwner.OwnedPlayerIndex;
+                playerOwnership.OwnedByPlayer = _playerOwner.OwnedByPlayer;
+            }
         }
     }
 }

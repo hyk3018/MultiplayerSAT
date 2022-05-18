@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Client.UI;
 using ScriptableObjects.Enemy;
+using Server.Movement;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace Shared.Entity.Towers
         POSITIVE = 2
     }
     
-    [RequireComponent(typeof(Health))]
+    [RequireComponent(typeof(Health)), RequireComponent(typeof(ServerPathFollower))]
     public class Enemy : NetworkBehaviour
     {
         [SerializeField]
@@ -22,19 +23,21 @@ namespace Shared.Entity.Towers
 
         [SerializeField]
         private SpriteRenderer spriteRenderer;
+        
+        [SerializeField]
+        private HealthBarUI _healthBarUI;
 
         public EnemyStatus Status;
         public event Action OnDeath;
         
         private Health _health;
-        private HealthBarUI _healthBarUI;
 
         private void Awake()
         {
             _health = GetComponent<Health>();
             _health.MaxHealth = enemyData.MaxHealth;
             _health.CurrentHealth.OnValueChanged += HandleHealthChangeClientRpc;
-            //_health.HealthZero += HandleDeathServerRpc;
+            GetComponent<ServerPathFollower>().ReachedPathEnd += () => { Destroy(gameObject); };
         }
 
         public override void OnDestroy()
@@ -47,11 +50,22 @@ namespace Shared.Entity.Towers
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!IsOwner) return;
-
+            
             if (!other.CompareTag("ChildhoodSelf")) return;
             
             var damage = enemyData.StatusDamage[(int)Status];
             other.gameObject.GetComponent<Health>().TakeDamageServerRpc(damage);
+
+            var childhoodSelf = other.gameObject.GetComponent<ChildhoodSelf>();
+            if (Status == EnemyStatus.POSITIVE)
+            {
+                childhoodSelf.AcceptEmotionRewardServerRpc(enemyData.AffectionReward);    
+            }
+            else
+            {
+                childhoodSelf.ReceiveDistressServerRpc();
+            }
+            
             Destroy(gameObject);
         }
 
@@ -75,6 +89,8 @@ namespace Shared.Entity.Towers
             if (Status == EnemyStatus.POSITIVE)
             {
                 _healthBarUI.Hide();
+                var pathFollower = GetComponent<ServerPathFollower>();
+                pathFollower.MoveSpeed = 1.2f;
             }
         }
 

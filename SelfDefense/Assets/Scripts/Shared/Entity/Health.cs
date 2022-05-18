@@ -21,7 +21,7 @@ namespace Shared.Entity
         [ServerRpc]
         public void TakeDamageServerRpc(int amount)
         {
-            CurrentHealth.Value = Math.Max(0, CurrentHealth.Value - amount);
+            CurrentHealth.Value = Math.Min(Math.Max(0, CurrentHealth.Value - amount), MaxHealth);
             if (CurrentHealth.Value == 0)
             {
                 HealthZero?.Invoke();

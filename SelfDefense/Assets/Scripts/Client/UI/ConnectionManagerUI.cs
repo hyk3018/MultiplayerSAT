@@ -4,6 +4,7 @@ using Server;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Client.UI
@@ -20,7 +21,7 @@ namespace Client.UI
         private TMP_Text roomCodeText, playersReadyText;
 
         [SerializeField]
-        private GameObject readyStatusBar, charSelectPanel, goalSelectPanel;
+        private GameObject readyStatusBar, charSelectPanel, goalSelectPanel, promptPanel, backgroundMaskPanel;
 
         [SerializeField]
         private SpriteSelectionUI charSelectionUI, goalSelectionUI;
@@ -30,6 +31,12 @@ namespace Client.UI
 
         [SerializeField]
         private ReadyListener joinGameReadyListener;
+
+        [SerializeField]
+        private Image playerColourImage;
+
+        [SerializeField]
+        private Sprite player1Colour, player2Colour;
 
         public void Start()
         {
@@ -77,6 +84,12 @@ namespace Client.UI
         
         }
 
+        public void Disconnect()
+        {
+            NetworkManager.Singleton.Shutdown();
+            SceneManager.LoadSceneAsync("MainScene");
+        }
+
         private async void Join()
         {
             if (RelayConnectionManager.Instance.IsRelayEnabled)
@@ -103,6 +116,10 @@ namespace Client.UI
             charSelectPanel.SetActive(true);
             goalSelectPanel.SetActive(true);
             readyStatusBar.SetActive(true);
+            promptPanel.SetActive(true);
+
+            var colour = NetworkManager.Singleton.IsHost ? player1Colour : player2Colour;
+            playerColourImage.sprite = colour;
         }
 
         private IEnumerator SyncLobbyDataOnStart()

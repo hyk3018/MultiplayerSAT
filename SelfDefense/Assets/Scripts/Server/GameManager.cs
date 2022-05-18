@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Client.Avatar;
 using Client.Commands.CommandPoints;
@@ -7,8 +8,10 @@ using ScriptableObjects.Player;
 using Server.EnemySpawning;
 using Shared.Entity;
 using TK.Core.Common;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Server
@@ -49,17 +52,26 @@ namespace Server
         private GameObject playerSpawnPrefab, childhoodSelfSpawnPrefab;
 
         [SerializeField]
-        private int minReady;
-
-        [SerializeField]
         private ServerEnemySpawner enemySpawner;
 
         [SerializeField]
-        private Button StartNextWaveButton;
+        private WaveReadyUI waveReadyUI;
+
+        [SerializeField]
+        private Animator countdownAnimation, wavePromptAnimation;
+
+        [SerializeField]
+        private TextMeshProUGUI wavePrompt;
+
+        [SerializeField]
+        private AudioSource countdownSound;
 
         [SerializeField]
         private ReadyListener joinGameReadyListener;
 
+        [SerializeField]
+        private GameObject gameBackgroundMask;
+        
         [SerializeField]
         private Transform player1ChildhoodSelfSpawn, player2ChildhoodSelfSpawn;
 
@@ -70,8 +82,16 @@ namespace Server
         private PlayerGoal player1Goal, player2Goal;
 
         [SerializeField]
+        private GameObject firstWinScreen, firstLoseScreen, winWinScreen, loseLoseScreen, winLoseScreen;
+        
+        [SerializeField]
         private PlayableCharacters playableCharacters;
 
+
+        [FormerlySerializedAs("minReady")]
+        [SerializeField]
+        public int MinReady;
+        
         public BoxCollider2D mapBounds;
         public event Action<int> Tick;
         public event Action<ulong, ulong> GameStarted;
@@ -83,29 +103,26 @@ namespace Server
         private float _tickPeriod;
         private bool _gameStarted;
         private Dictionary<ulong, Tuple<int, int>> _playerCustomization;
+        private Dictionary<ulong, bool> _finishedStatuses;
+        private ulong _player1Id, _player2Id;
+        private Dictionary<ulong, GameObject>  _playerGos, _childhoodSelves;
+        private static readonly int PlayCountdown = Animator.StringToHash("PlayCountdown");
+        private static readonly int Show = Animator.StringToHash("Show");
+        private static readonly int Hide = Animator.StringToHash("Hide");
 
         private void Awake()
         {
             _playerCustomization = new Dictionary<ulong, Tuple<int, int>>();
+            _finishedStatuses = new Dictionary<ulong, bool>();
+            _playerGos = new Dictionary<ulong, GameObject>();
+            _childhoodSelves = new Dictionary<ulong, GameObject>();
+            
             GameState = GameState.PREP;
 
-            StartNextWaveButton.onClick.AddListener(() =>
-            {
-                StartNextWaveButton.gameObject.SetActive(false);
-                StartNextWaveServerRpc();
-            });
-            
             enemySpawner.NoEnemiesRemaining += OnNoEnemiesRemainClientRpc;
         }
 
-        [ClientRpc]
-        private void OnNoEnemiesRemainClientRpc(bool finishedGame)
-        {
-            GameState = GameState.PREP;
-            if (finishedGame) return;
-            
-            StartNextWaveButton.gameObject.SetActive(true);
-        }
+        #region Start Game
 
         public void RegisterListenToReadyUp()
         {
@@ -118,18 +135,18 @@ namespace Server
         {
             if (!IsHost) return;
             Debug.Log("Start game if ready");
-            if (newValue == minReady)
+            if (newValue == MinReady)
             {
                 var clientIds = NetworkManager.Singleton.ConnectedClientsIds;
                 var player1IdIndex = clientIds[0] == NetworkManager.Singleton.LocalClientId ? 0 : 1;
-                var player1Id = clientIds[player1IdIndex];
-                var player2Id = clientIds.Count == 2 ? clientIds[1 - player1IdIndex] : 0;
+                _player1Id = clientIds[player1IdIndex];
+                _player2Id = clientIds.Count == 2 ? clientIds[1 - player1IdIndex] : 0;
 
                 var idToPlayerData = new Dictionary<ulong, PlayerSpawnData>();
-                idToPlayerData[player2Id] = new PlayerSpawnData(player2Id, _playerCustomization[player2Id].Item1,
-                    _playerCustomization[player2Id].Item2, false);
-                idToPlayerData[player1Id] = new PlayerSpawnData(player1Id, _playerCustomization[player1Id].Item1,
-                    _playerCustomization[player1Id].Item2, true);
+                idToPlayerData[_player2Id] = new PlayerSpawnData(_player2Id, _playerCustomization[_player2Id].Item1,
+                    _playerCustomization[_player2Id].Item2, false);
+                idToPlayerData[_player1Id] = new PlayerSpawnData(_player1Id, _playerCustomization[_player1Id].Item1,
+                    _playerCustomization[_player1Id].Item2, true);
             
                 
                 foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
@@ -137,29 +154,96 @@ namespace Server
                     InitialisePlayerGame(idToPlayerData[clientId]);
                 }
 
-                StartGameAtTimeClientRpc(player1Id, player2Id);
+                player1Goal.SetGoalEnabledClientRpc(false);
+                player2Goal.SetGoalEnabledClientRpc(false);
+                
+                player1Goal.GoalReached += () =>
+                {
+                    OnGameEnd(_player1Id, true);
+                };
+                player2Goal.GoalReached += () =>
+                {
+                    OnGameEnd(_player2Id, true);
+                };
+                
+                StartGameAtTimeClientRpc(_player1Id, _player2Id);
             }
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        private void StartNextWaveServerRpc()
+        private void OnGameEnd(ulong playerId, bool goalReached)
         {
-            HideReadyButtonClientRpc();
-            enemySpawner.SpawnNextWave();
-            GameState = GameState.PLAYING;
+            Destroy(_playerGos[playerId]);
+            Destroy(_childhoodSelves[playerId]);
+            
+            ulong otherId = playerId == _player1Id ? _player2Id : _player1Id;
+
+            DestroyPlayerUIClientRpc(playerId);
+            
+            var clientRpcParams = new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams
+                {
+                    TargetClientIds = new ulong[]{playerId}
+                }
+            };
+            
+            if (_finishedStatuses.TryGetValue(otherId, out var otherReached))
+            {
+                if (goalReached)
+                {
+                    ShowEndScreenClientRpc(otherReached ? "ww" : "wl");
+                }
+                else
+                {
+                    ShowEndScreenClientRpc(otherReached ? "wl" : "ll");
+                }
+            }
+            else
+            {
+                _finishedStatuses[playerId] = goalReached;
+                ShowEndScreenClientRpc(goalReached ? "w" : "l", 
+                    clientRpcParams);
+            }
         }
 
         [ClientRpc]
-        private void HideReadyButtonClientRpc()
+        private void DestroyPlayerUIClientRpc(ulong playerId)
         {
-            StartNextWaveButton.gameObject.SetActive(false);
+            Destroy(playerId == _player1Id ? player1UI.gameObject : player2UI.gameObject);
+        }
+
+        [ClientRpc]
+        private void ShowEndScreenClientRpc(String endStatus, ClientRpcParams clientRpcParams = default)
+        {
+            gameBackgroundMask.SetActive(true);
+            switch (endStatus)
+            {
+                case "w":
+                    firstWinScreen.SetActive(true);
+                    break;
+                case "l":
+                    firstLoseScreen.SetActive(true);
+                    break;
+                case "ww":
+                    winWinScreen.SetActive(true);
+                    break;
+                case "wl":
+                    winLoseScreen.SetActive(true);
+                    break;
+                case "ll":
+                    loseLoseScreen.SetActive(true);
+                    break;
+                default:
+                    return;
+            }
         }
 
         private void InitialisePlayerGame(PlayerSpawnData spawnData)
         {
             var playerGo = Instantiate(playerSpawnPrefab);
             playerGo.GetComponent<NetworkObject>().SpawnAsPlayerObject(spawnData.PlayerId);
-
+            _playerGos[spawnData.PlayerId] = playerGo;
+            
             var childhoodSelfGo = SpawnChildhoodSelf(spawnData.PlayerId);
 
             InitialisePlayerClientRpc(spawnData, playerGo.GetComponent<NetworkObject>(),
@@ -174,9 +258,12 @@ namespace Server
                 || !childhoodSelfGoRef.TryGet(out var childhoodSelfGo)) return;
             
             playerGo.GetComponent<SpriteRenderer>().sprite =
-                playableCharacters.Sprites[spawnData.SpriteIndex].Idle[0];
+                playableCharacters.Sprites[spawnData.SpriteIndex].Right;
             childhoodSelfGo.GetComponent<SpriteRenderer>().sprite =
-                playableCharacters.Sprites[spawnData.SpriteIndex].Idle[0];
+                playableCharacters.Sprites[spawnData.SpriteIndex].Right;
+
+            var playerAffectionPoints = playerGo.GetComponent<AffectionPoints>();
+            childhoodSelfGo.GetComponent<ChildhoodSelf>().Initialise(playerAffectionPoints);
             
             playerGo.transform.position =
                 spawnData.IsHostPlayer ? player1ChildhoodSelfSpawn.position : player2ChildhoodSelfSpawn.position;
@@ -193,6 +280,12 @@ namespace Server
             player1UI.gameObject.SetActive(true);
             player2UI.gameObject.SetActive(true);
             
+            // Code specific to server
+
+            if (IsServer)
+            {
+                playerAffectionPoints.Initialise();
+            }
             
             // Code specific to owner object
             
@@ -202,23 +295,36 @@ namespace Server
             var commandExecutor = playerGoal.GetComponent<GoalCommandExecutor>();
             commandExecutor.BuildingGoal += () =>
             {
+                if (!playerGo) return;
                 var clientInputProcessor = playerGo.GetComponent<ClientInputProcessor>();
                 clientInputProcessor.BlockInput();
             };
             commandExecutor.StoppedBuildingGoal += () =>
             {
+                if (!playerGo) return;
                 var clientInputProcessor = playerGo.GetComponent<ClientInputProcessor>();
                 clientInputProcessor.UnblockInput();
             };
+            
+            waveReadyUI.ReadyUpForNewWave();
+            wavePrompt.text = enemySpawner.GetNextSpawnPrompt();
+            wavePromptAnimation.SetTrigger(Show);
         }
-
+        
         private GameObject SpawnChildhoodSelf(ulong clientId)
         {
             var childhoodSelfGo = Instantiate(childhoodSelfSpawnPrefab);
+            _childhoodSelves[clientId] = childhoodSelfGo;
+            
             childhoodSelfGo.GetComponent<NetworkObject>().Spawn();
+            childhoodSelfGo.GetComponent<ChildhoodSelf>().Distressed += () =>
+            {
+                OnGameEnd(clientId, false);
+            };
+            
             return childhoodSelfGo;
         }
-
+        
         [ServerRpc(RequireOwnership = false)]
         public void SetPlayerCustomizationServerRpc(ulong playerId, int spriteDataIndex, int goalDataIndex)
         {
@@ -230,16 +336,68 @@ namespace Server
         private void StartGameAtTimeClientRpc(ulong player1Id, ulong player2Id)
         {
             Debug.Log("Game start");
-            
-            StartNextWaveButton.gameObject.SetActive(true);
-            
+
             _currentTick = NetworkManager.LocalTime.Tick;
             _gameStarted = true;
             _tickPeriod = 1f / NetworkManager.LocalTime.TickRate;
 
+            gameBackgroundMask.SetActive(false);
             GameStarted?.Invoke(player1Id, player2Id);
         }
+        
+        #endregion
 
+        #region Wave Ready Management
+
+        [ClientRpc]
+        private void OnNoEnemiesRemainClientRpc(bool finishedGame)
+        {
+            GameState = GameState.PREP;
+            if (finishedGame) return;
+
+            waveReadyUI.ReadyUpForNewWave();
+            Debug.Log("Show prompt");
+            wavePrompt.text = enemySpawner.GetNextSpawnPrompt();
+            wavePromptAnimation.SetTrigger(Show);
+
+            if (!IsHost) return;
+            
+            player1Goal.SetGoalEnabledClientRpc(false);
+            player2Goal.SetGoalEnabledClientRpc(false);
+        }
+        
+        [ServerRpc(RequireOwnership = false)]
+        private void StartNextWaveServerRpc()
+        {
+            player1Goal.SetGoalEnabledClientRpc(true);
+            player2Goal.SetGoalEnabledClientRpc(true);
+            enemySpawner.SpawnNextWave();
+            GameState = GameState.PLAYING;
+        }
+                
+        [ServerRpc]
+        public void StartWaveServerRpc()
+        {
+            StartCoroutine(StartGameCountdown());
+        }
+
+        [ClientRpc]
+        private void StartWaveCountdownClientRpc()
+        {
+            wavePromptAnimation.SetTrigger(Hide);
+            countdownAnimation.SetTrigger(PlayCountdown);
+            countdownSound.Play();
+        }
+
+        private IEnumerator StartGameCountdown()
+        {
+            StartWaveCountdownClientRpc();
+            yield return new WaitForSeconds(3);
+            StartNextWaveServerRpc();
+        }
+        
+        #endregion
+        
         private void Update()
         {
             if (!_gameStarted) return;
@@ -263,5 +421,6 @@ namespace Server
         // {
         //     joinGameReadyListener.readyCount.OnValueChanged?.Invoke(readyCount.Value, readyCount.Value);
         // }
+
     }
 }

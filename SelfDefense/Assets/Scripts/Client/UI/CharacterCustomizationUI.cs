@@ -20,7 +20,7 @@ namespace Client.UI
         private void Start()
         {
             List<Sprite> characters = playableCharacters.Sprites
-                .Select(character => character.Idle[0]).ToList();
+                .Select(character => character.Right).ToList();
             characterSelector.Initialise(characters);
             goalSelector.Initialise(playableCharacters.Goals);
         }

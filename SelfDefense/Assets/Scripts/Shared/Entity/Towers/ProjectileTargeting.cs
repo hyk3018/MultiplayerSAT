@@ -15,6 +15,9 @@ namespace Shared.Entity.Towers
 
         [SerializeField]
         private TowerType towerType;
+
+        [SerializeField]
+        private AudioSource hitSound;
         
         private GameObject _currentTarget;
 
@@ -34,26 +37,40 @@ namespace Shared.Entity.Towers
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!IsServer) return;
-            if (other.gameObject == _currentTarget)
+            if (other.gameObject != _currentTarget) return;
+            
+            var finalDamage = damage;
+                
+            var enemy = other.GetComponent<Enemy>();
+            if (enemy != null)
             {
-                var finalDamage = damage;
-                
-                var enemy = other.GetComponent<Enemy>();
-                if (enemy != null)
-                {
-                    finalDamage = Mathf.CeilToInt(damage * enemy.GetEffectiveness(towerType));
-                }
-                
-                var health = _currentTarget.GetComponent<Health>();
-                health.TakeDamageServerRpc(finalDamage);
-                Destroy(gameObject);
+                finalDamage = Mathf.CeilToInt(damage * enemy.GetEffectiveness(towerType));
+                PlayHitSoundClientRpc();
             }
+
+                
+            var health = _currentTarget.GetComponent<Health>();
+            health.TakeDamageServerRpc(finalDamage);
+            Destroy(gameObject);
+        }
+
+        [ClientRpc]
+        private void PlayHitSoundClientRpc()
+        {
+            hitSound.Play();
         }
 
         private void HandleTick(int tickNumber)
         {
-            var targetDirection = _currentTarget.transform.position - transform.position;
-            transform.position += targetDirection.normalized * projectileSpeed;
+            if (_currentTarget)
+            {
+                var targetDirection = _currentTarget.transform.position - transform.position;
+                transform.position += targetDirection.normalized * projectileSpeed;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
 
         public void Initialise(NetworkObject currentTarget)

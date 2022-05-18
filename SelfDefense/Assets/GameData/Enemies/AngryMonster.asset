@@ -12,13 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ad865a5a16747c6827c0ea1b2c99572, type: 3}
   m_Name: AngryMonster
   m_EditorClassIdentifier: 
-  MaxHealth: 5
-  AffectedBy: 01000000
+  MaxHealth: 15
+  AffectedBy: 010000000400000002000000
   EffectiveMultiplier:
   - 1
-  StatusThreshold: 050000000300000001000000
-  StatusDamage: 0300000000000000fdffffff
+  - 1
+  - 1
+  StatusThreshold: 0a0000000300000001000000
+  StatusDamage: 0a00000005000000ffffffff
   StatusSprites:
   - {fileID: -3903693708446669586, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}
   - {fileID: -107562068250393501, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}
   - {fileID: 3594733187379469396, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}
+  AffectionReward: 2

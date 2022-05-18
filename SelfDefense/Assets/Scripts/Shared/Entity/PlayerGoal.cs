@@ -20,8 +20,10 @@ namespace Shared.Entity
 
         public float buildTime;
         public event Action<float> GoalIncremented;
+        public event Action GoalReached;
         
         private float _goalProgress;
+        public bool CanWorkOnGoal { get; set; }
 
         public void Initialise(Sprite goalSprite)
         {
@@ -29,12 +31,23 @@ namespace Shared.Entity
             goalSpriteRenderer.sprite = goalSprite;
         }
 
+        [ClientRpc]
+        public void SetGoalEnabledClientRpc(bool goalEnabled)
+        {
+            CanWorkOnGoal = goalEnabled;
+        }
+        
         public void IncrementGoal()
         {
             _goalProgress = Math.Min(_goalProgress + goalIncrementStep, 1f);
             revealMaskTransform.position = Vector3.Lerp(revealStart.position, 
                 revealEnd.position, _goalProgress);
             GoalIncremented?.Invoke(_goalProgress);
+
+            if (_goalProgress >= 1f)
+            {
+                GoalReached?.Invoke();
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2277037605316961667}
   - component: {fileID: 6199521177865369397}
   - component: {fileID: -1633910113596988712}
+  - component: {fileID: 3074631494812982554}
   m_Layer: 5
   m_Name: CommandButton
   m_TagString: Untagged
@@ -140,6 +141,20 @@ MonoBehaviour:
   affectionCostText: {fileID: 3710842665849386224}
   affordabilityMask: {fileID: 4023180957479438258}
   Commands: {fileID: 11400000, guid: 6c5b5a0258c405240bb80791bb0edebe, type: 2}
+--- !u!114 &3074631494812982554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 676681389552086489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 633b83629bed48dfbf5570f136ffa732, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minHoverDuration: 0.6
+  toolTipPrefab: {fileID: 1660212815771626363, guid: ced80c5c651c3e64d9ea61e25ca620a2, type: 3}
 --- !u!1 &4023180957479438258
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Cyberpunk Characters/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/Game.unity
+    path: Assets/Scenes/MainScene.unity
     guid: 9abdc84424ab08147a74d3af8a7060a8
   m_configObjects: {}

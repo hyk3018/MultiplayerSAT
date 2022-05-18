@@ -20,5 +20,8 @@ namespace Server.EnemySpawning
         public List<WaveBatchData> Batches;
 
         public float MinNextSpawnTime;
+
+        [TextArea]
+        public string Prompt;
     }
 }

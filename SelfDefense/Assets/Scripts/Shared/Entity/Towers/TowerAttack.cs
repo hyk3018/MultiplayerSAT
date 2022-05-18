@@ -10,7 +10,6 @@ namespace Shared.Entity.Towers
     public struct TowerStat
     {
         public float AttackRate;
-        public float AttackDamage;
         public TowerType TowerType;
     }
     
@@ -52,7 +51,6 @@ namespace Shared.Entity.Towers
             if (!IsServer)
             {
                 enabled = false;
-                return;
             }
         }
 
@@ -115,10 +113,10 @@ namespace Shared.Entity.Towers
 
         private void HandleTick(int tickNumber)
         {
+            _attackCooldown -= NetworkManager.LocalTime.FixedDeltaTime;
             if (_currentTarget == null)
                 return;
             
-            var enemyHealth = _currentTarget.GetComponent<Health>();
             var enemy = _currentTarget.GetComponent<Enemy>();
             if (enemy.Status == EnemyStatus.POSITIVE)
             {
@@ -126,10 +124,8 @@ namespace Shared.Entity.Towers
                 return;
             }
 
-            _attackCooldown -= NetworkManager.LocalTime.FixedDeltaTime;
             if (_attackCooldown <= 0.0 && _currentTarget != null)
             {
-                Debug.Log("Attack");
                 AttackEnemyServerRpc(_currentTarget);
                 _attackCooldown = towerStat.AttackRate;
             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Client.Commands;
 using Unity.Netcode;
 using UnityEngine;
@@ -9,40 +10,43 @@ namespace Client.Avatar
     public class CommandSensor : NetworkBehaviour
     {
         public static event Action<Dictionary<CommandExecutor, List<CommandExecutionData>>> CommandTypesChange;
-        private ClientInputProcessor _clientInputProcessor;
-        private Dictionary<CommandExecutor, List<CommandExecutionData>> _currentCommandData;
+
+        private HashSet<CommandExecutor> _executorsInRange;
 
         private void Awake()
         {
-            _clientInputProcessor = GetComponent<ClientInputProcessor>();
+            _executorsInRange = new HashSet<CommandExecutor>();
         }
         
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!IsOwner) return;
             
-            var commandPoints = other.gameObject.GetComponents<CommandExecutor>();
-            var commands = GetCommandsFromCommandPoints(commandPoints);
-            _currentCommandData = commands;
-            CommandTypesChange?.Invoke(_currentCommandData);
+            foreach (var commandExecutor in other.gameObject.GetComponents<CommandExecutor>())
+            {
+                _executorsInRange.Add(commandExecutor);
+            }
+            
+            CommandTypesChange?.Invoke(GetCommandsFromCommandPoints());
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
             if (!IsOwner) return;
             
-            var commandPoints = other.gameObject.GetComponents<CommandExecutor>();
-
-            if (commandPoints == null || commandPoints.Length == 0) return;
+            foreach (var commandExecutor in other.gameObject.GetComponents<CommandExecutor>())
+            {
+                _executorsInRange.Remove(commandExecutor);
+            }
             
-            CommandTypesChange?.Invoke(new Dictionary<CommandExecutor, List<CommandExecutionData>>());
+            CommandTypesChange?.Invoke(GetCommandsFromCommandPoints());
         }
 
-        private static Dictionary<CommandExecutor, List<CommandExecutionData>> GetCommandsFromCommandPoints(CommandExecutor[] commandExecutors)
+        private  Dictionary<CommandExecutor, List<CommandExecutionData>> GetCommandsFromCommandPoints()
         {
             var executorCommands = new Dictionary<CommandExecutor, List<CommandExecutionData>>();
-
-            foreach (CommandExecutor commandExecutor in commandExecutors)
+            
+            foreach (var commandExecutor in _executorsInRange)
             {
                 var commands = new List<CommandExecutionData>();
                 commands.AddRange(commandExecutor.GetAvailableCommands());

@@ -13,13 +13,15 @@ MonoBehaviour:
   m_Name: SadMonster
   m_EditorClassIdentifier: 
   MaxHealth: 10
-  AffectedBy: 0000000001000000
+  AffectedBy: 000000000300000002000000
   EffectiveMultiplier:
-  - 1
   - 0.5
-  StatusThreshold: 0a0000000100000001000000
-  StatusDamage: 0300000000000000feffffff
+  - 0.5
+  - 1
+  StatusThreshold: 0a0000000500000001000000
+  StatusDamage: 0500000002000000ffffffff
   StatusSprites:
   - {fileID: 4125451458786334308, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}
   - {fileID: 6882827412546452871, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}
   - {fileID: -2478357478313685170, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}
+  AffectionReward: 2

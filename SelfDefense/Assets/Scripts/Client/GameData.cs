@@ -15,7 +15,7 @@ namespace Client
             Commands.CommandTypeMap = new Dictionary<CommandType, Command>();
             foreach (var command in Commands.AllCommands)
             {
-                Commands.CommandTypeMap[command.CommandType] = command;
+                Commands.CommandTypeMap[command.Type] = command;
             }
         }
     }

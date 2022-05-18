@@ -2,19 +2,20 @@ using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Server.Movement
 {
     public class ServerPathFollower : NetworkBehaviour
     {
-        [SerializeField]
-        private float moveSpeed;
+        [FormerlySerializedAs("moveSpeed")]
+        public float MoveSpeed;
+
+        public event Action ReachedPathEnd;
         
         private List<Vector3> _currentPath;
         private Vector3 _nextMoveVector;
         private bool _moving;
-
-        public float MoveSpeed => moveSpeed;
 
         private void Awake()
         {
@@ -67,11 +68,11 @@ namespace Server.Movement
 
             var currentPosition = transform.position;
             var distanceToTarget = Vector3.Distance(currentPosition, _currentPath[0]);
-            if (distanceToTarget < moveSpeed)
+            if (distanceToTarget < MoveSpeed)
             {
                 transform.position = _currentPath[0];
                 _currentPath.RemoveAt(0);
-                distanceToTarget = moveSpeed - distanceToTarget;
+                distanceToTarget = MoveSpeed - distanceToTarget;
             }
             
             // If we reached the end of the path midway through movement then stop
@@ -79,10 +80,11 @@ namespace Server.Movement
             {
                 _nextMoveVector = Vector3.zero;
                 _moving = false;
+                ReachedPathEnd?.Invoke();
                 return;
             }
             
-            _nextMoveVector = Mathf.Min(distanceToTarget, moveSpeed) * (_currentPath[0] - currentPosition).normalized;
+            _nextMoveVector = Mathf.Min(distanceToTarget, MoveSpeed) * (_currentPath[0] - currentPosition).normalized;
         }
 
         private void HandleTick(int tick)

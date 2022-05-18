@@ -207,6 +207,8 @@ GameObject:
   - component: {fileID: 8199042215273742919}
   - component: {fileID: -6972642163887883762}
   - component: {fileID: -7960946184274704324}
+  - component: {fileID: 8360190708652891619}
+  - component: {fileID: 7035153397219101460}
   m_Layer: 0
   m_Name: PlayTower
   m_TagString: Untagged
@@ -312,6 +314,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OwnedPlayerIndex: 0
   OwnedByPlayer: 0
+--- !u!114 &8360190708652891619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355596652255708599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a810cc6a3f3f47d0bcceba05f893c940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  configuredCommandTypes:
+  - CommandType: 4
+    TargetIds: 
+  towerList: {fileID: 11400000, guid: bcd7e312f01760946835608b3e4b90ee, type: 2}
+--- !u!58 &7035153397219101460
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355596652255708599}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.16
 --- !u!1 &7230240774707645033
 GameObject:
   m_ObjectHideFlags: 0
@@ -341,7 +375,7 @@ Transform:
   m_GameObject: {fileID: 7230240774707645033}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1.85201}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.85201}
   m_Children: []
   m_Father: {fileID: 4856609280953393266}
   m_RootOrder: 0
@@ -447,8 +481,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerStat:
-    AttackRate: 2
-    AttackDamage: 5
+    AttackRate: 1.5
     TowerType: 0
   attackProjectile: {fileID: 908715140632109452, guid: 36112e50cb42a40448e0076a797c67cb, type: 3}
   projectileSpawnLocation: {fileID: 5864213068684813619}

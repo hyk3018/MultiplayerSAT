@@ -28,7 +28,7 @@ namespace Client.Commands.CommandPoints
 
         public override List<CommandExecutionData> GetAvailableCommands()
         {
-            if (_buildingGoal)
+            if (_buildingGoal || !_playerGoal.CanWorkOnGoal)
                 return new List<CommandExecutionData>();
             
             return base.GetAvailableCommands();

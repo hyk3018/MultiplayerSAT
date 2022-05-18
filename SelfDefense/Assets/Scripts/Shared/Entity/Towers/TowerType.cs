@@ -4,6 +4,8 @@
     {
         PLAY,
         MUSIC,
-        LAUGHTER
+        LAUGHTER,
+        PLAY_CHILDHOOD,
+        MUSIC_LOVESONG
     }
 }

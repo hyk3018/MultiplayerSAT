@@ -33,6 +33,11 @@ namespace Client.UI
         {
             _hovering = false;
             _currentHoverDuration = 0f;
+
+            if (_currentTooltip)
+            {
+                Destroy(_currentTooltip);
+            }
         }
 
         private void Update()
@@ -43,7 +48,8 @@ namespace Client.UI
                 
                 if (_currentHoverDuration >= minHoverDuration && !_currentTooltip)
                 {
-                    _currentTooltip = Instantiate(toolTipPrefab);
+                    _currentTooltip = Instantiate(toolTipPrefab, transform);
+                    _currentTooltip.GetComponent<Canvas>().overrideSorting = true;
                     _currentTooltip.transform.position = gameObject.transform.position;
                     _currentTooltip.GetComponent<TooltipUI>().Initialise(_tooltipText, _tooltipImage);
                 }

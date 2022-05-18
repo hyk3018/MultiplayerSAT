@@ -18,15 +18,17 @@ namespace ScriptableObjects.Player
         BUILD_MUSIC,
         BUILD_LAUGHTER,
         WORK_GOAL,
+        UPGRADE_TOY_CHILDHOOD,
+        UPGRADE_MUSIC_LOVESONG
     }
     
     [Serializable]
     public struct Command
     {
-        public CommandType CommandType;
-        public string CommandName;
-        public Sprite CommandImage;
-        public string CommandTooltip;
-        public int CommandCost;
+        public CommandType Type;
+        public string Name;
+        public Sprite Image;
+        public string Tooltip;
+        public int Cost;
     }
 }

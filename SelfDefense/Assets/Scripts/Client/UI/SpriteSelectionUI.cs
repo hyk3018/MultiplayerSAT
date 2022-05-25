@@ -17,14 +17,14 @@ namespace Client.UI
 
         public int selectedIndex;
 
-        public void Initialise(List<Sprite> selectionOptions)
+        public void Initialise(List<Sprite> selectionOptions, List<string> names)
         {
             for (int i = 0; i < selectionOptions.Count; i++)
             {
                 var go = Instantiate(spriteButtonsPrefab, spriteButtonsParent);
 
                 var button = go.GetComponent<ImageSelectionButtonUI>();
-                button.Initialise(selectionOptions[i], this);
+                button.Initialise(selectionOptions[i], this, names == null ? "" : names[i]);
                 button.SetSelectionValue(i);
                 button.RegisterOnClicked(value =>
                 {

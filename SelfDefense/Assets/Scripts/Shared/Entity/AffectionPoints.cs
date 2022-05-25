@@ -11,20 +11,6 @@ namespace Shared.Entity
 
         public NetworkVariable<int> Points;
 
-        private void Update()
-        {
-            if (!IsOwner) return;
-            
-            if (Input.GetKeyDown(KeyCode.U))
-            {
-                IncreasePointsServerRpc();
-            }
-            else if (Input.GetKeyDown(KeyCode.I))
-            {
-                DecreasePointsServerRpc();
-            }
-        }
-
         [ServerRpc]
         private void DecreasePointsServerRpc()
         {

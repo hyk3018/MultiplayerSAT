@@ -17,7 +17,7 @@ MonoBehaviour:
   EffectiveMultiplier:
   - 1
   - 1
-  - 1
+  - 0.75
   StatusThreshold: 050000000300000001000000
   StatusDamage: 0500000002000000ffffffff
   StatusSprites:

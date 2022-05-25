@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpeed: 1
-  damage: 10
+  damage: 5
   towerType: 3
   hitSound: {fileID: -4547554618362106154}
 --- !u!114 &908715140632109453

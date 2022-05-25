@@ -35,7 +35,7 @@ namespace Server.EnemySpawning
                 StartCoroutine(SpawnBatch(batch));
             }
 
-            _nextWave.Value++;
+            _nextWave.Value = Math.Min(waves.Count - 1, _nextWave.Value + 1);
         }
 
         private int CalculateEnemyCount(WaveData nextWave)

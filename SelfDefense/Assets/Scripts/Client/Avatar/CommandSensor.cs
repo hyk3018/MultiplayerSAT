@@ -25,9 +25,15 @@ namespace Client.Avatar
             foreach (var commandExecutor in other.gameObject.GetComponents<CommandExecutor>())
             {
                 _executorsInRange.Add(commandExecutor);
+                commandExecutor.CommandsChanged += OnCommandsChanged;
             }
             
             CommandTypesChange?.Invoke(GetCommandsFromCommandPoints());
+        }
+
+        private void OnCommandsChanged()
+        {
+            CommandTypesChange?.Invoke(GetCommandsFromCommandPoints()); 
         }
 
         private void OnTriggerExit2D(Collider2D other)
@@ -37,6 +43,7 @@ namespace Client.Avatar
             foreach (var commandExecutor in other.gameObject.GetComponents<CommandExecutor>())
             {
                 _executorsInRange.Remove(commandExecutor);
+                commandExecutor.CommandsChanged -= OnCommandsChanged;
             }
             
             CommandTypesChange?.Invoke(GetCommandsFromCommandPoints());

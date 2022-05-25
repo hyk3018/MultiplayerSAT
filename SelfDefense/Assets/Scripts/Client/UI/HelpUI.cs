@@ -21,6 +21,10 @@ namespace Client.UI
         {
             HelpPanels[_currentActiveIndex].SetActive(false);
             _currentActiveIndex = (_currentActiveIndex - 1) % HelpPanels.Count;
+            if (_currentActiveIndex < 0)
+            {
+                _currentActiveIndex += HelpPanels.Count;
+            }
             HelpPanels[_currentActiveIndex].SetActive(true);
         }
         

@@ -52,6 +52,7 @@ namespace Client.Commands.CommandPoints
         {
             BuildingGoal?.Invoke();
             _buildingGoal = true;
+            ChangeCommand();
 
             foreach (Animation animation in buildAnimations)
             {
@@ -68,6 +69,7 @@ namespace Client.Commands.CommandPoints
             yield return new WaitForSeconds(_playerGoal.buildTime);
             _playerGoal.IncrementGoal();
             _buildingGoal = false;
+            ChangeCommand();
             
             foreach (Animation animation in buildAnimations)
             {

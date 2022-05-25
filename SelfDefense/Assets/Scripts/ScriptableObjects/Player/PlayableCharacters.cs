@@ -23,5 +23,7 @@ namespace ScriptableObjects.Player
         public List<CharacterSpriteData> Sprites;
 
         public List<Sprite> Goals;
+
+        public List<string> GoalNames;
     }
 }

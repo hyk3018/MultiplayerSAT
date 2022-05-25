@@ -465,7 +465,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerStat:
-    AttackRate: 1
+    AttackRate: 0.75
     TowerType: 3
   attackProjectile: {fileID: 908715140632109452, guid: 9132585743e61384fb411817d83b60ea, type: 3}
   projectileSpawnLocation: {fileID: 5864213068684813619}

@@ -224,7 +224,7 @@ Transform:
   m_GameObject: {fileID: 4345987956393201091}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1.852005}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.852005}
   m_Children: []
   m_Father: {fileID: 4856609280953393266}
   m_RootOrder: 0
@@ -330,7 +330,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerStat:
-    AttackRate: 1
+    AttackRate: 1.5
     TowerType: 4
   attackProjectile: {fileID: 908715140632109452, guid: e477eb07ad83aee41ba1762fea8679ea, type: 3}
   projectileSpawnLocation: {fileID: 5864213068684813619}

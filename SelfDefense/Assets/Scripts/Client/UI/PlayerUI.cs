@@ -49,7 +49,8 @@ namespace Client.UI
 
         private void OnDestroy()
         {
-            _playerGoal.GoalIncremented -= OnGoalIncremented;
+            if (_playerGoal)
+                _playerGoal.GoalIncremented -= OnGoalIncremented;
             _affectionPoints.Points.OnValueChanged -= OnAffectionPointsChanged;
         }
     }

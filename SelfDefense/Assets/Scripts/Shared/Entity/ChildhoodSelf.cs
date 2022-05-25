@@ -47,6 +47,7 @@ namespace Shared.Entity
 
         private void HandleTick(int obj)
         {
+            return;
             if (GameManager.Instance.GameState != GameState.PLAYING) return;
             
             _decayCounter++;
@@ -81,16 +82,6 @@ namespace Shared.Entity
         {
             sadAnimation.Play();
             sadSound.Play();
-        }
-
-        private void Update()
-        {
-            if (!IsOwner) return;
-            
-            if (Input.GetKeyDown(KeyCode.H))
-            {
-                _health.TakeDamageServerRpc(1);
-            }
         }
     }
 }

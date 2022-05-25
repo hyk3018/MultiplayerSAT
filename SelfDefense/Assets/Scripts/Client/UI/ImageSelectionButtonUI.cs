@@ -1,4 +1,5 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,9 @@ namespace Client.UI
     {
         [SerializeField]
         private Image image;
+
+        [SerializeField]
+        private TextMeshProUGUI imageName;
 
         [SerializeField]
         private Image background;
@@ -20,9 +24,14 @@ namespace Client.UI
 
         private int _indexValue;
         
-        public void Initialise(Sprite sprite, SpriteSelectionUI characterSelectionUI)
+        public void Initialise(Sprite sprite, SpriteSelectionUI characterSelectionUI, string name)
         {
             image.sprite = sprite;
+            if (imageName != null)
+            {
+                imageName.text = name;
+            }
+            
             characterSelectionUI.SelectionChanged += value =>
             {
                 background.color = value == _indexValue ? selectedColor : Color.white;

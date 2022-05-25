@@ -24,4 +24,4 @@ MonoBehaviour:
   - {fileID: 4125451458786334308, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}
   - {fileID: 6882827412546452871, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}
   - {fileID: -2478357478313685170, guid: 67a5c2b709df57b42b20d799f408eced, type: 3}
-  AffectionReward: 2
+  AffectionReward: 1

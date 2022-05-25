@@ -170,14 +170,24 @@ namespace Server
             }
         }
 
+        public void LocalPlayerEnd()
+        {
+            DestroyPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void DestroyPlayerServerRpc(ulong playerId)
+        {
+            Destroy(_childhoodSelves[playerId]);
+            DestroyPlayerUIClientRpc(playerId);
+            Destroy(_playerGos[playerId]);
+        }
+
         private void OnGameEnd(ulong playerId, bool goalReached)
         {
-            Destroy(_playerGos[playerId]);
-            Destroy(_childhoodSelves[playerId]);
+            if (_finishedStatuses.ContainsKey(playerId)) return;
             
             ulong otherId = playerId == _player1Id ? _player2Id : _player1Id;
-
-            DestroyPlayerUIClientRpc(playerId);
             
             var clientRpcParams = new ClientRpcParams
             {
@@ -189,6 +199,9 @@ namespace Server
             
             if (_finishedStatuses.TryGetValue(otherId, out var otherReached))
             {
+                DestroyPlayerServerRpc(playerId);
+                DestroyPlayerServerRpc(otherId);
+                
                 if (goalReached)
                 {
                     ShowEndScreenClientRpc(otherReached ? "ww" : "wl");
@@ -201,8 +214,13 @@ namespace Server
             else
             {
                 _finishedStatuses[playerId] = goalReached;
+
                 ShowEndScreenClientRpc(goalReached ? "w" : "l", 
                     clientRpcParams);
+
+                if (goalReached) return;
+                
+                DestroyPlayerServerRpc(playerId);
             }
         }
 

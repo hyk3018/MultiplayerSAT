@@ -49,12 +49,19 @@ namespace Client.Commands
     {
         [SerializeField]
         private List<CommandExecutionData> configuredCommandTypes;
-
+        
+        public event Action CommandsChanged;
+        
         protected PlayerOwnership _playerOwner;
 
         private void Awake()
         {
             _playerOwner = GetComponent<PlayerOwnership>();
+        }
+
+        protected void ChangeCommand()
+        {
+            CommandsChanged?.Invoke();
         }
 
         public virtual List<CommandExecutionData> GetAvailableCommands()
@@ -68,5 +75,6 @@ namespace Client.Commands
         {
             return;
         }
+
     }
 }

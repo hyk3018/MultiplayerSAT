@@ -21,8 +21,8 @@ namespace Client.UI
         {
             List<Sprite> characters = playableCharacters.Sprites
                 .Select(character => character.Right).ToList();
-            characterSelector.Initialise(characters);
-            goalSelector.Initialise(playableCharacters.Goals);
+            characterSelector.Initialise(characters, null);
+            goalSelector.Initialise(playableCharacters.Goals, playableCharacters.GoalNames);
         }
     }
 }

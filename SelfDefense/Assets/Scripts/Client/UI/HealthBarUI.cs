@@ -13,6 +13,11 @@ namespace Client.UI
         [SerializeField]
         private Health health;
 
+        [SerializeField]
+        private Sprite redSide, blueSide;
+
+        public Image SideIndicator;
+
         public void Initialise(Health healthComponent)
         {
             health = healthComponent;
@@ -35,6 +40,11 @@ namespace Client.UI
         public void Hide()
         {
             gameObject.SetActive(false);
+        }
+
+        public void SetSide(int side)
+        {
+            SideIndicator.sprite = side == 0 ? redSide : blueSide;
         }
     }
 }

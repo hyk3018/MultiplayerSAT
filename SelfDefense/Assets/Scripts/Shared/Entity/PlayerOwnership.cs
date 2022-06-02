@@ -9,6 +9,7 @@ namespace Shared.Entity
     {
         public int OwnedPlayerIndex;
         public bool OwnedByPlayer;
+        public ulong OwnedPlayerId;
         
         private ulong _player1Id;
         private ulong _player2Id;
@@ -19,6 +20,7 @@ namespace Shared.Entity
             {
                 var ownerIndex = NetworkManager.Singleton.LocalClientId == player1Id ? 0 : 1;
                 OwnedByPlayer = ownerIndex == OwnedPlayerIndex;
+                OwnedPlayerId = OwnedPlayerIndex == 0 ? player1Id : player2Id;
             };
         }
     }

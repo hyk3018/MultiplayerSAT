@@ -47,6 +47,12 @@ namespace Shared.Entity.Towers
             _health.HealthZero -= HandleDeathServerRpc;
         }
 
+        [ClientRpc]
+        public void SetSideClientRpc(int side)
+        {
+            _healthBarUI.SetSide(side);
+        }
+
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!IsOwner) return;

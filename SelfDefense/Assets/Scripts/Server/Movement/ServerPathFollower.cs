@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -11,6 +12,7 @@ namespace Server.Movement
         [FormerlySerializedAs("moveSpeed")]
         public float MoveSpeed;
 
+        public float DistanceToEnd;
         public event Action ReachedPathEnd;
         
         private List<Vector3> _currentPath;
@@ -20,6 +22,19 @@ namespace Server.Movement
         private void Awake()
         {
             GameManager.Instance.Tick += HandleTick;
+        }
+
+        private void Start()
+        {
+            CalculateDistanceToEnd();
+        }
+
+        private void CalculateDistanceToEnd()
+        {
+            for (int i = 0; i < _currentPath.Count - 1; i++)
+            {
+                DistanceToEnd += (_currentPath[i + 1] - _currentPath[i]).magnitude;
+            }
         }
 
         public override void OnDestroy()
@@ -45,17 +60,7 @@ namespace Server.Movement
         {
             _currentPath = newPath;
             _moving = true;
-        }
-
-        public void AddToCurrentPath(List<Vector3> pathToAdd)
-        {
-            _currentPath.AddRange(pathToAdd);
-            _moving = true;
-        }
-
-        public bool HasPathTarget()
-        {
-            return _currentPath.Count > 0;
+            CalculateDistanceToEnd();
         }
         
         private void CalculateNextMovementDirection()
@@ -70,6 +75,7 @@ namespace Server.Movement
             var distanceToTarget = Vector3.Distance(currentPosition, _currentPath[0]);
             if (distanceToTarget < MoveSpeed)
             {
+                DistanceToEnd -= distanceToTarget;
                 transform.position = _currentPath[0];
                 _currentPath.RemoveAt(0);
                 distanceToTarget = MoveSpeed - distanceToTarget;
@@ -93,6 +99,7 @@ namespace Server.Movement
             {
                 CalculateNextMovementDirection();
                 transform.position += _nextMoveVector;
+                DistanceToEnd -= _nextMoveVector.magnitude;
             }
         }
     }

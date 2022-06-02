@@ -335,6 +335,7 @@ MonoBehaviour:
   attackProjectile: {fileID: 908715140632109452, guid: 2c510429281b37746be5eac09323501c, type: 3}
   projectileSpawnLocation: {fileID: 5864213068684813619}
   rotator: {fileID: 2947436127204131882}
+  TargetType: 0
 --- !u!1 &4355596652255708599
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,6 +350,8 @@ GameObject:
   - component: {fileID: -7960946184274704324}
   - component: {fileID: 5383236682793004117}
   - component: {fileID: 8944731110164289284}
+  - component: {fileID: -6622141917014518672}
+  - component: {fileID: 6909126014316271010}
   m_Layer: 0
   m_Name: MusicTower
   m_TagString: Untagged
@@ -454,6 +457,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OwnedPlayerIndex: 0
   OwnedByPlayer: 0
+  OwnedPlayerId: 0
 --- !u!58 &5383236682793004117
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -485,4 +489,33 @@ MonoBehaviour:
   configuredCommandTypes:
   - CommandType: 5
     TargetIds: 
+  - CommandType: 10
+    TargetIds: 
   towerList: {fileID: 11400000, guid: bcd7e312f01760946835608b3e4b90ee, type: 2}
+  baseTowerSlot: {fileID: 0}
+--- !u!114 &-6622141917014518672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355596652255708599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8775ea51f4b44beeb9eae3d54548800a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  configuredCommandTypes: []
+--- !u!114 &6909126014316271010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355596652255708599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db221d40d69438d93d372046071ab97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RefundAmount: 2

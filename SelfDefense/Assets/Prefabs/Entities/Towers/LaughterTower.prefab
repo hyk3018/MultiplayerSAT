@@ -208,6 +208,9 @@ GameObject:
   - component: {fileID: -6972642163887883762}
   - component: {fileID: -7960946184274704324}
   - component: {fileID: 1382910393830862894}
+  - component: {fileID: 6376477349086515993}
+  - component: {fileID: -5518735441172412692}
+  - component: {fileID: 696679475457064485}
   m_Layer: 0
   m_Name: LaughterTower
   m_TagString: Untagged
@@ -313,6 +316,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OwnedPlayerIndex: 0
   OwnedByPlayer: 0
+  OwnedPlayerId: 0
 --- !u!58 &1382910393830862894
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -329,6 +333,49 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.16
+--- !u!114 &6376477349086515993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355596652255708599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8775ea51f4b44beeb9eae3d54548800a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  configuredCommandTypes: []
+--- !u!114 &-5518735441172412692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355596652255708599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a810cc6a3f3f47d0bcceba05f893c940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  configuredCommandTypes:
+  - CommandType: 10
+    TargetIds: 
+  towerList: {fileID: 11400000, guid: bcd7e312f01760946835608b3e4b90ee, type: 2}
+  baseTowerSlot: {fileID: 0}
+--- !u!114 &696679475457064485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355596652255708599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db221d40d69438d93d372046071ab97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RefundAmount: 7
 --- !u!1 &7230240774707645033
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,3 +516,4 @@ MonoBehaviour:
   attackProjectile: {fileID: 908715140632109452, guid: 8a9966a122f61ec4483f095157723a84, type: 3}
   projectileSpawnLocation: {fileID: 5864213068684813619}
   rotator: {fileID: 2947436127204131882}
+  TargetType: 0

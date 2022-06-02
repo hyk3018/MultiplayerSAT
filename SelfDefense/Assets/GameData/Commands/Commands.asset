@@ -51,3 +51,28 @@ MonoBehaviour:
     Tooltip: Singing love songs to your childhood self can build an even stronger
       relationship with them and develop a deep emotional bond.
     Cost: 10
+  - Type: 6
+    Name: Target Last
+    Image: {fileID: 21300000, guid: f53bfd606107eab4b9bb779dbe4c3ca6, type: 3}
+    Tooltip: Change your tower to target the enemy furthest from the childhood self.
+    Cost: 0
+  - Type: 7
+    Name: Target First
+    Image: {fileID: 21300000, guid: d859b2f254c12b742930cdc4f31aebe7, type: 3}
+    Tooltip: Change your tower to target the enemy closest to the childhood self.
+    Cost: 0
+  - Type: 8
+    Name: Target Closest
+    Image: {fileID: 21300000, guid: 032e849eeef407b4f8dce2755e452d99, type: 3}
+    Tooltip: Change your tower to target the enemy closest to this tower.
+    Cost: 0
+  - Type: 9
+    Name: Target Strongest
+    Image: {fileID: 21300000, guid: 2125f528a5780f44dbe0e56c3124f823, type: 3}
+    Tooltip: Change your tower to target the enemy with the highest HP.
+    Cost: 0
+  - Type: 10
+    Name: Remove Tower
+    Image: {fileID: 21300000, guid: bb26c511e57172843a16a8216b49c1d9, type: 3}
+    Tooltip: Remove this tower for a partial refund of affection points.
+    Cost: 0

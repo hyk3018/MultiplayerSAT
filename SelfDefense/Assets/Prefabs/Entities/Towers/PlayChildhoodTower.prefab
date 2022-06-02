@@ -208,6 +208,9 @@ GameObject:
   - component: {fileID: -6972642163887883762}
   - component: {fileID: -7960946184274704324}
   - component: {fileID: 7301176612638584473}
+  - component: {fileID: -3874480547640439418}
+  - component: {fileID: 9037313293514715189}
+  - component: {fileID: 169762593464735953}
   m_Layer: 0
   m_Name: PlayChildhoodTower
   m_TagString: Untagged
@@ -314,6 +317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OwnedPlayerIndex: 0
   OwnedByPlayer: 0
+  OwnedPlayerId: 0
 --- !u!58 &7301176612638584473
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -330,6 +334,49 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.16
+--- !u!114 &-3874480547640439418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355596652255708599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8775ea51f4b44beeb9eae3d54548800a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  configuredCommandTypes: []
+--- !u!114 &9037313293514715189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355596652255708599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a810cc6a3f3f47d0bcceba05f893c940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  configuredCommandTypes:
+  - CommandType: 10
+    TargetIds: 
+  towerList: {fileID: 11400000, guid: bcd7e312f01760946835608b3e4b90ee, type: 2}
+  baseTowerSlot: {fileID: 0}
+--- !u!114 &169762593464735953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355596652255708599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db221d40d69438d93d372046071ab97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RefundAmount: 6
 --- !u!1 &7230240774707645033
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,6 +517,7 @@ MonoBehaviour:
   attackProjectile: {fileID: 908715140632109452, guid: 9132585743e61384fb411817d83b60ea, type: 3}
   projectileSpawnLocation: {fileID: 5864213068684813619}
   rotator: {fileID: 2947436127204131882}
+  TargetType: 0
 --- !u!1 &8860705390910706114
 GameObject:
   m_ObjectHideFlags: 0

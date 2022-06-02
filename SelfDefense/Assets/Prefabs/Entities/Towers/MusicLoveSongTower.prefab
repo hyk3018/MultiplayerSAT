@@ -335,6 +335,7 @@ MonoBehaviour:
   attackProjectile: {fileID: 908715140632109452, guid: e477eb07ad83aee41ba1762fea8679ea, type: 3}
   projectileSpawnLocation: {fileID: 5864213068684813619}
   rotator: {fileID: 2947436127204131882}
+  TargetType: 0
 --- !u!1 &4355596652255708599
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,6 +349,9 @@ GameObject:
   - component: {fileID: -6972642163887883762}
   - component: {fileID: -7960946184274704324}
   - component: {fileID: 5383236682793004117}
+  - component: {fileID: 6742505772635529768}
+  - component: {fileID: 933385511169646465}
+  - component: {fileID: -1401352229002527150}
   m_Layer: 0
   m_Name: MusicLoveSongTower
   m_TagString: Untagged
@@ -454,6 +458,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OwnedPlayerIndex: 0
   OwnedByPlayer: 0
+  OwnedPlayerId: 0
 --- !u!58 &5383236682793004117
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -470,6 +475,49 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.16
+--- !u!114 &6742505772635529768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355596652255708599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8775ea51f4b44beeb9eae3d54548800a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  configuredCommandTypes: []
+--- !u!114 &933385511169646465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355596652255708599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a810cc6a3f3f47d0bcceba05f893c940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  configuredCommandTypes:
+  - CommandType: 10
+    TargetIds: 
+  towerList: {fileID: 11400000, guid: bcd7e312f01760946835608b3e4b90ee, type: 2}
+  baseTowerSlot: {fileID: 0}
+--- !u!114 &-1401352229002527150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355596652255708599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db221d40d69438d93d372046071ab97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RefundAmount: 6
 --- !u!1 &5704877798383733077
 GameObject:
   m_ObjectHideFlags: 0

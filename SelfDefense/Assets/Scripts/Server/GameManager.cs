@@ -440,5 +440,10 @@ namespace Server
         //     joinGameReadyListener.readyCount.OnValueChanged?.Invoke(readyCount.Value, readyCount.Value);
         // }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void RefundAffectionPointsServerRpc(ulong ownedPlayerId, int amount)
+        {
+            _playerGos[ownedPlayerId].GetComponent<AffectionPoints>().SpendPointsServerRpc(-amount);
+        }
     }
 }

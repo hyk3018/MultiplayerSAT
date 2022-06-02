@@ -23,7 +23,7 @@ namespace Shared.Entity
             Points.Value = Points.Value + 10;
         }
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void SpendPointsServerRpc(int commandCost)
         {
             Points.Value -= commandCost;

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Server;
+using Server.Movement;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -11,6 +13,14 @@ namespace Shared.Entity.Towers
     {
         public float AttackRate;
         public TowerType TowerType;
+    }
+
+    public enum TowerTargetType
+    {
+        LAST,
+        FIRST,
+        CLOSE,
+        STRONG
     }
     
     public class TowerAttack : NetworkBehaviour
@@ -27,6 +37,8 @@ namespace Shared.Entity.Towers
         [SerializeField]
         private Transform rotator;
         
+        public TowerTargetType TargetType;
+        
         private List<GameObject> _enemiesInRange;
         private GameObject _currentTarget;
         private float _attackCooldown;
@@ -36,6 +48,7 @@ namespace Shared.Entity.Towers
             if (!IsServer) return;
             GameManager.Instance.Tick += HandleTick;
             _enemiesInRange = new List<GameObject>();
+            TargetType = TowerTargetType.FIRST;
         }
 
         public override void OnDestroy()
@@ -91,11 +104,47 @@ namespace Shared.Entity.Towers
                 return;
             }
             
-            if (_currentTarget == null || !_enemiesInRange.Contains(_currentTarget))
+            GameObject currentTarget;
+            switch (TargetType)
             {
-                ChangeTargetClientRpc(_enemiesInRange[0].GetComponent<NetworkObject>());
-                _currentTarget = _enemiesInRange[0];
+                case TowerTargetType.LAST:
+                    currentTarget = _enemiesInRange
+                        .OrderByDescending(x => x
+                            .GetComponent<ServerPathFollower>()
+                            .DistanceToEnd)
+                        .First();
+                    break;
+                case TowerTargetType.FIRST:
+                    currentTarget = _enemiesInRange
+                        .OrderBy(x => x
+                            .GetComponent<ServerPathFollower>()
+                            .DistanceToEnd)
+                        .First();
+                    break;
+                case TowerTargetType.CLOSE:
+                    currentTarget = _enemiesInRange
+                        .OrderBy(x => (x.transform.position - transform.position)
+                            .magnitude)
+                        .First();
+                    break;
+                case TowerTargetType.STRONG:
+                    currentTarget = _enemiesInRange
+                        .OrderByDescending(x => x.GetComponent<Health>().CurrentHealth.Value)
+                        .First();
+                    break;
+                default:
+                    currentTarget = _enemiesInRange[0];
+                    break;
             }
+                
+            ChangeTargetClientRpc(currentTarget.GetComponent<NetworkObject>());
+            _currentTarget = currentTarget;
+        }
+
+        [ClientRpc]
+        public void ChangeTargetTypeClientRpc(TowerTargetType type)
+        {
+            TargetType = type;
         }
 
         [ClientRpc]

@@ -209,6 +209,8 @@ GameObject:
   - component: {fileID: -7960946184274704324}
   - component: {fileID: 8360190708652891619}
   - component: {fileID: 7035153397219101460}
+  - component: {fileID: 7704842324046380556}
+  - component: {fileID: -8885335371534471570}
   m_Layer: 0
   m_Name: PlayTower
   m_TagString: Untagged
@@ -314,6 +316,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OwnedPlayerIndex: 0
   OwnedByPlayer: 0
+  OwnedPlayerId: 0
 --- !u!114 &8360190708652891619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -329,7 +332,10 @@ MonoBehaviour:
   configuredCommandTypes:
   - CommandType: 4
     TargetIds: 
+  - CommandType: 10
+    TargetIds: 
   towerList: {fileID: 11400000, guid: bcd7e312f01760946835608b3e4b90ee, type: 2}
+  baseTowerSlot: {fileID: 0}
 --- !u!58 &7035153397219101460
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -346,6 +352,32 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.16
+--- !u!114 &7704842324046380556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355596652255708599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8775ea51f4b44beeb9eae3d54548800a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  configuredCommandTypes: []
+--- !u!114 &-8885335371534471570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355596652255708599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db221d40d69438d93d372046071ab97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RefundAmount: 2
 --- !u!1 &7230240774707645033
 GameObject:
   m_ObjectHideFlags: 0
@@ -486,3 +518,4 @@ MonoBehaviour:
   attackProjectile: {fileID: 908715140632109452, guid: 36112e50cb42a40448e0076a797c67cb, type: 3}
   projectileSpawnLocation: {fileID: 5864213068684813619}
   rotator: {fileID: 2947436127204131882}
+  TargetType: 0

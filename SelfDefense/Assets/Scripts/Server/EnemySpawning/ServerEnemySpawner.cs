@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Client.UI;
 using Server.Movement;
 using Shared.Entity.Towers;
 using Unity.Netcode;
@@ -14,6 +15,9 @@ namespace Server.EnemySpawning
     {
         [SerializeField]
         private List<WaveData> waves;
+
+        [SerializeField]
+        private GameObject redPath;
 
         public event Action<bool> NoEnemiesRemaining;
 
@@ -95,7 +99,8 @@ namespace Server.EnemySpawning
             }
             
             go.GetComponent<NetworkObject>().Spawn();
-            go.GetComponent<Enemy>().OnDeath += () =>
+            var enemy = go.GetComponent<Enemy>();
+            enemy.OnDeath += () =>
             {
                 _enemiesInCurrentWave--;
                 if (_enemiesInCurrentWave == 0)
@@ -103,6 +108,8 @@ namespace Server.EnemySpawning
                     NoEnemiesRemaining?.Invoke(_nextWave.Value == waves.Count);
                 }
             };
+
+            enemy.SetSideClientRpc(enemySpawnData.Path == redPath ? 0 : 1);
 
             return true;
         }

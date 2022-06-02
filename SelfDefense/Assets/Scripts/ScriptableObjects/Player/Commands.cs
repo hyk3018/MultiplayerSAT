@@ -19,7 +19,12 @@ namespace ScriptableObjects.Player
         BUILD_LAUGHTER,
         WORK_GOAL,
         UPGRADE_TOY_CHILDHOOD,
-        UPGRADE_MUSIC_LOVESONG
+        UPGRADE_MUSIC_LOVESONG,
+        RANGE_LAST,
+        RANGE_FIRST,
+        RANGE_CLOSE,
+        RANGE_STRONG,
+        REMOVE_TOWER
     }
     
     [Serializable]

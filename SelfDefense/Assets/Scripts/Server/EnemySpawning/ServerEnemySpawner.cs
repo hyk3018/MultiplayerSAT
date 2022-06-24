@@ -2,11 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Client.UI;
 using Server.Movement;
 using Shared.Entity.Towers;
 using Unity.Netcode;
-using UnityEditor;
 using UnityEngine;
 
 namespace Server.EnemySpawning
@@ -47,6 +45,9 @@ namespace Server.EnemySpawning
             return nextWave.Batches.Select(batch => batch.Amount).Sum();
         }
 
+        /*
+         * Spawn batch enemy in regular intervals after start time
+         */
         private IEnumerator SpawnBatch(WaveBatchData batch)
         {
             yield return new WaitForSeconds(batch.SpawnStartTime);
@@ -98,6 +99,7 @@ namespace Server.EnemySpawning
                 return false;
             }
             
+            // Track enemy death to know when round ends
             go.GetComponent<NetworkObject>().Spawn();
             var enemy = go.GetComponent<Enemy>();
             enemy.OnDeath += () =>
@@ -114,6 +116,9 @@ namespace Server.EnemySpawning
             return true;
         }
 
+        /*
+         * Used cached path if possible to avoid recalculation
+         */
         private List<Vector3> GetVectorPath(GameObject pathObject)
         {
             if (PathVectors.TryGetValue(pathObject, out List<Vector3> path))

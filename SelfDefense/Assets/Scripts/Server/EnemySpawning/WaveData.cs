@@ -19,6 +19,7 @@ namespace Server.EnemySpawning
         [SerializeField]
         public List<WaveBatchData> Batches;
 
+        // Currently unused, potential use for future start next wave early function
         public float MinNextSpawnTime;
 
         [TextArea]

@@ -1,6 +1,5 @@
 ﻿using System;
 using Server;
-using Shared.Entity.Towers;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -8,6 +7,7 @@ namespace Shared.Entity
 {
     public class ChildhoodSelf : NetworkBehaviour
     {
+        // Currently unused decay mechanic
         [SerializeField]
         private int healthDecayRate;
 
@@ -48,6 +48,8 @@ namespace Shared.Entity
         private void HandleTick(int obj)
         {
             return;
+            
+            // Currently unused decay mechanic
             if (GameManager.Instance.GameState != GameState.PLAYING) return;
             
             _decayCounter++;

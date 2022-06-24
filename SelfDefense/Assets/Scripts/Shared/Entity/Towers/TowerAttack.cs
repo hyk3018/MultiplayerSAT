@@ -166,6 +166,7 @@ namespace Shared.Entity.Towers
             if (_currentTarget == null)
                 return;
             
+            // If enemy is converted to positive, recalculate
             var enemy = _currentTarget.GetComponent<Enemy>();
             if (enemy.Status == EnemyStatus.POSITIVE)
             {
@@ -173,6 +174,7 @@ namespace Shared.Entity.Towers
                 return;
             }
 
+            // Fire projectile once cooldown reached
             if (_attackCooldown <= 0.0 && _currentTarget != null)
             {
                 AttackEnemyServerRpc(_currentTarget);
@@ -180,6 +182,9 @@ namespace Shared.Entity.Towers
             }
         }
 
+        /*
+         * Rotate tower to face target every tick
+         */
         private void FixedUpdate()
         {
             if (_currentTarget == null) return;

@@ -1,5 +1,4 @@
-﻿using System;
-using Server;
+﻿using Server;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -10,10 +9,7 @@ namespace Shared.Entity
         public int OwnedPlayerIndex;
         public bool OwnedByPlayer;
         public ulong OwnedPlayerId;
-        
-        private ulong _player1Id;
-        private ulong _player2Id;
-        
+
         private void Awake()
         {
             GameManager.Instance.GameStarted += (player1Id, player2Id) =>

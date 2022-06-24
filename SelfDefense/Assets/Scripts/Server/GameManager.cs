@@ -12,7 +12,6 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 namespace Server
 {
@@ -134,7 +133,7 @@ namespace Server
         private void StartGameIfReadyServerRpc(int value, int newValue)
         {
             if (!IsHost) return;
-            Debug.Log("Start game if ready");
+            
             if (newValue == MinReady)
             {
                 var clientIds = NetworkManager.Singleton.ConnectedClientsIds;
@@ -427,18 +426,6 @@ namespace Server
                 Tick?.Invoke(++_currentTick);
             }
         }
-
-        // [ServerRpc(RequireOwnership = false)]
-        // public void RetrieveStartingPlayerCountServerRpc()
-        // {
-        //     SendStartingPlayerCountClientRpc();
-        // }
-        //
-        // [ClientRpc]
-        // private void SendStartingPlayerCountClientRpc()
-        // {
-        //     joinGameReadyListener.readyCount.OnValueChanged?.Invoke(readyCount.Value, readyCount.Value);
-        // }
 
         [ServerRpc(RequireOwnership = false)]
         public void RefundAffectionPointsServerRpc(ulong ownedPlayerId, int amount)

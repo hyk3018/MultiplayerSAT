@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
 using Client.Avatar;
-using Client.Commands;
 using Server;
-using Server.Movement;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace Shared.Entity
 {
+    /*
+     * Implements server side of player movement and state
+     */
     public class NetworkPlayerState : NetworkBehaviour
     {
         public float MoveSpeed;
@@ -54,6 +55,9 @@ namespace Shared.Entity
             ServerStateReceived?.Invoke(stateData);
         }
 
+        /*
+         * Client input requests are added to queue, processed during tick
+         */
         [ServerRpc]
         public void SubmitPlayerInputServerRpc(ClientInputData clientInputData)
         {
@@ -62,6 +66,7 @@ namespace Shared.Entity
 
         private void HandleTick(int tick)
         {
+            // Apply all inputs between ticks
             int bufferIndex = -1;
             while (_inputQueue.Count > 0)
             {
@@ -74,6 +79,7 @@ namespace Shared.Entity
                 _stateBuffer[bufferIndex] = stateData;
             }
 
+            // If state has changed, send back to clients
             if (bufferIndex != -1)
             {
                 ReturnResultStateClientRpc(_stateBuffer[bufferIndex]);

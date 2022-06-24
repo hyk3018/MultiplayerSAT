@@ -1,5 +1,4 @@
-﻿using System;
-using Server;
+﻿using Server;
 using Unity.Netcode;
 using UnityEngine;
 

@@ -1,5 +1,4 @@
-﻿using System;
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 
 namespace Shared.Entity
@@ -10,18 +9,6 @@ namespace Shared.Entity
         private int affectionPointsStart;
 
         public NetworkVariable<int> Points;
-
-        [ServerRpc]
-        private void DecreasePointsServerRpc()
-        {
-            Points.Value = Points.Value - 10;
-        }
-
-        [ServerRpc]
-        private void IncreasePointsServerRpc()
-        {
-            Points.Value = Points.Value + 10;
-        }
 
         [ServerRpc(RequireOwnership = false)]
         public void SpendPointsServerRpc(int commandCost)

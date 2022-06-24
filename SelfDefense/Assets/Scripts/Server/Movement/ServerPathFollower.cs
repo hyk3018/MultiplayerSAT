@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Server.Movement
 {
+    /*
+     * Implements enemy navigation behaviour, can follow waypoints
+     */
     public class ServerPathFollower : NetworkBehaviour
     {
         [FormerlySerializedAs("moveSpeed")]
@@ -52,7 +54,6 @@ namespace Server.Movement
             if (!IsServer)
             {
                 enabled = false;
-                return;
             }
         }
 

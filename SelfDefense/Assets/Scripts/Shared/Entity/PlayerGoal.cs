@@ -1,5 +1,4 @@
 ﻿using System;
-using Server;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -16,14 +15,12 @@ namespace Shared.Entity
         [SerializeField]
         private Transform revealMaskTransform, revealStart, revealEnd;
 
-        public AudioClip GoalSound;
-
         public float buildTime;
         public event Action<float> GoalIncremented;
         public event Action GoalReached;
+        public bool CanWorkOnGoal { get; set; }
         
         private float _goalProgress;
-        public bool CanWorkOnGoal { get; set; }
 
         public void Initialise(Sprite goalSprite)
         {

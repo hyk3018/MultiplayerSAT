@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
 using Client.Avatar;
 using Client.Commands;
-using Shared.Entity;
 using TK.Core.Common;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace Client.UI
@@ -25,6 +22,7 @@ namespace Client.UI
             CommandSensor.CommandTypesChange -= OnCommandTypesChange;
         }
 
+        // Update panel with button per command available
         private void OnCommandTypesChange(Dictionary<CommandExecutor, List<CommandExecutionData>> availableCommands)
         {
             transform.RemoveAllChildGameObjects();

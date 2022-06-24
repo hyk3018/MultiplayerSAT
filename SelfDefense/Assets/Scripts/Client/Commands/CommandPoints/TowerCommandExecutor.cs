@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using ScriptableObjects.Player;
 using ScriptableObjects.Towers;
 using Server;
 using Shared.Entity;
 using Shared.Entity.Towers;
-using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -110,9 +108,9 @@ namespace Client.Commands.CommandPoints
                     Debug.Log("PlayerOwnership component not found in tower prefab.");
                     return;
                 }
-                playerOwnership.OwnedPlayerIndex = _playerOwner.OwnedPlayerIndex;
-                playerOwnership.OwnedByPlayer = _playerOwner.OwnedByPlayer;
-                playerOwnership.OwnedPlayerId = _playerOwner.OwnedPlayerId;
+                playerOwnership.OwnedPlayerIndex = PlayerOwner.OwnedPlayerIndex;
+                playerOwnership.OwnedByPlayer = PlayerOwner.OwnedByPlayer;
+                playerOwnership.OwnedPlayerId = PlayerOwner.OwnedPlayerId;
 
                 var towerCommandExecutor = networkObject.GetComponent<TowerCommandExecutor>();
                 if (towerCommandExecutor == null)

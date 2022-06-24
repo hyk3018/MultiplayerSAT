@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 namespace Client.UI
 {
+    /*
+     * Used to select character and goal sprites for goal
+     */
     public class ImageSelectionButtonUI : MonoBehaviour
     {
         [SerializeField]

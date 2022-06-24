@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Client.Commands;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace Client.Avatar
 {
+    /*
+     * Handles collisions with CommandExecutors to provide commands to player
+     */
     public class CommandSensor : NetworkBehaviour
     {
         public static event Action<Dictionary<CommandExecutor, List<CommandExecutionData>>> CommandTypesChange;
@@ -18,6 +20,9 @@ namespace Client.Avatar
             _executorsInRange = new HashSet<CommandExecutor>();
         }
         
+        /*
+         * Update commands in range upon collision enter or exit
+         */
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!IsOwner) return;
@@ -29,11 +34,6 @@ namespace Client.Avatar
             }
             
             CommandTypesChange?.Invoke(GetCommandsFromCommandPoints());
-        }
-
-        private void OnCommandsChanged()
-        {
-            CommandTypesChange?.Invoke(GetCommandsFromCommandPoints()); 
         }
 
         private void OnTriggerExit2D(Collider2D other)
@@ -49,6 +49,14 @@ namespace Client.Avatar
             CommandTypesChange?.Invoke(GetCommandsFromCommandPoints());
         }
 
+        /*
+         * Used to listen for when commands become unavailable
+         */
+        private void OnCommandsChanged()
+        {
+            CommandTypesChange?.Invoke(GetCommandsFromCommandPoints()); 
+        }
+        
         private  Dictionary<CommandExecutor, List<CommandExecutionData>> GetCommandsFromCommandPoints()
         {
             var executorCommands = new Dictionary<CommandExecutor, List<CommandExecutionData>>();

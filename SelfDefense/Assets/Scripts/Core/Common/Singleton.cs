@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace TK.Core.Common
 {
+    /*
+     * Simple singleton implementation for NetworkBehaviours
+     */
+    
     public class Singleton<T> : NetworkBehaviour where T : Component
     {
         private static T _instance;

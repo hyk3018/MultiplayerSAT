@@ -1,5 +1,4 @@
-﻿using System;
-using Shared.Entity;
+﻿using Shared.Entity;
 using UnityEngine;
 using UnityEngine.UI;
 

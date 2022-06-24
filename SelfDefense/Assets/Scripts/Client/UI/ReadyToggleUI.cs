@@ -1,5 +1,4 @@
 using Client.UI;
-using Server;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

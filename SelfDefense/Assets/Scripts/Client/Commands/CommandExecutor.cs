@@ -52,11 +52,11 @@ namespace Client.Commands
         
         public event Action CommandsChanged;
         
-        protected PlayerOwnership _playerOwner;
+        protected PlayerOwnership PlayerOwner;
 
         private void Awake()
         {
-            _playerOwner = GetComponent<PlayerOwnership>();
+            PlayerOwner = GetComponent<PlayerOwnership>();
         }
 
         protected void ChangeCommand()
@@ -66,8 +66,7 @@ namespace Client.Commands
 
         public virtual List<CommandExecutionData> GetAvailableCommands()
         {
-            if (!_playerOwner.OwnedByPlayer) return new List<CommandExecutionData>();
-            return configuredCommandTypes;
+            return !PlayerOwner.OwnedByPlayer ? new List<CommandExecutionData>() : configuredCommandTypes;
         }
 
         [ServerRpc(RequireOwnership = false)]

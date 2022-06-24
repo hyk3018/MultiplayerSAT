@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using ScriptableObjects.Player;
 using Shared.Entity.Towers;
 using Unity.Netcode;
-using UnityEngine;
 
 namespace Client.Commands.CommandPoints
 {
+    /*
+     * Implements change tower targetting behaviour
+     */
     public class TowerTargetCommandExecutor : CommandExecutor
     {
         private TowerAttack _towerAttack;
@@ -18,7 +20,7 @@ namespace Client.Commands.CommandPoints
 
         public override List<CommandExecutionData> GetAvailableCommands()
         {
-            if (!_playerOwner.OwnedByPlayer) return new List<CommandExecutionData>();
+            if (!PlayerOwner.OwnedByPlayer) return new List<CommandExecutionData>();
             
             switch (_towerAttack.TargetType)
             {

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Client.Avatar;
-using Client.Commands;
+﻿using Client.Commands;
 using Server;
 using Shared.Entity;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Client.UI
@@ -43,9 +39,9 @@ namespace Client.UI
         {
             _button.onClick.AddListener(() =>
             {
-                Debug.Log("Button pressed!");
                 executor.ExecuteCommandServerRpc(_currentCommandExecutionData);
 
+                // Remember to spend affection points
                 if (_affectionPoints)
                 {
                     _affectionPoints.SpendPointsServerRpc(Commands
@@ -70,6 +66,9 @@ namespace Client.UI
             tooltipTrigger.Initialise(command.Tooltip, command.Image);
         }
         
+        /*
+         * Deactivate button if not enough affection points
+         */
         void OnAffectionChange(int value, int newValue)
         {
             var command = Commands.CommandTypeMap[_currentCommandExecutionData.CommandType];

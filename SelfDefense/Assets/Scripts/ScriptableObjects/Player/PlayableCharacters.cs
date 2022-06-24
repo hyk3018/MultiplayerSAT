@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -13,6 +12,7 @@ namespace ScriptableObjects.Player
         [SerializeField]
         public Sprite Right;
 
+        // Currently unused - flip the right sprite instead
         [SerializeField]
         public Sprite Left;
     }

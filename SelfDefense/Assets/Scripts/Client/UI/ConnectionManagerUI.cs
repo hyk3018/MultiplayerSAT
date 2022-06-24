@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Threading.Tasks;
 using Server;
 using TMPro;
 using Unity.Netcode;
@@ -120,14 +118,6 @@ namespace Client.UI
 
             var colour = NetworkManager.Singleton.IsHost ? player1Colour : player2Colour;
             playerColourImage.sprite = colour;
-        }
-
-        private IEnumerator SyncLobbyDataOnStart()
-        {
-            yield return new WaitForSeconds(0.5f);
-            
-            readyStatusBar.SetActive(true);
-            roomCodeText.text = joinCodeInput.text;
         }
     }
 }

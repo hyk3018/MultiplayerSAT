@@ -1,6 +1,4 @@
-﻿using System;
-using Server;
-using Shared.Entity;
+﻿using Shared.Entity;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;

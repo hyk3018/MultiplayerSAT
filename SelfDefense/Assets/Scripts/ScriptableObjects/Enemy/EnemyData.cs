@@ -20,6 +20,10 @@ namespace ScriptableObjects.Enemy
             return AffectedBy.Contains(towerType);
         }
 
+        /*
+         * Default effectiveness is immune if not specified
+         * Otherwise, lookup dictionary by matching indexes
+         */
         public float GetEffectiveness(TowerType towerType)
         {
             if (!AffectedBy.Contains(towerType))

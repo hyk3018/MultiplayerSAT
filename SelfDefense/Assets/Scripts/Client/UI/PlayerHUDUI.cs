@@ -1,5 +1,3 @@
-using System;
-using Client.Avatar;
 using Shared.Entity;
 using Unity.Netcode;
 using UnityEngine;
@@ -26,7 +24,7 @@ namespace Client.UI
         {
             if (playerObject.IsOwner)
             {
-                var commandPanelUI = Instantiate(commandsUIPrefab, transform);
+                Instantiate(commandsUIPrefab, transform);
             }
         }
     }

@@ -3,23 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using ScriptableObjects.Player;
 using Shared.Entity;
-using Shared.Entity.Towers;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace Client.Commands.CommandPoints
 {
+    /*
+     * Implements working on goal behaviour with animations
+     */
     [RequireComponent(typeof(PlayerGoal))]
     public class GoalCommandExecutor : CommandExecutor
     {
         [SerializeField]
         private List<Animation> buildAnimations;
         
+        public event Action BuildingGoal;
+        public event Action StoppedBuildingGoal;
+        
         private PlayerGoal _playerGoal;
         private bool _buildingGoal;
 
-        public event Action BuildingGoal;
-        public event Action StoppedBuildingGoal;
         
         private void Start()
         {
@@ -54,16 +57,19 @@ namespace Client.Commands.CommandPoints
             _buildingGoal = true;
             ChangeCommand();
 
-            foreach (Animation animation in buildAnimations)
+            foreach (Animation anim in buildAnimations)
             {
-                animation.gameObject.SetActive(true);
-                animation.Play();
+                anim.gameObject.SetActive(true);
+                anim.Play();
             }
 
             _playerGoal.GetComponent<AudioSource>().Play();
             StartCoroutine(StopBuildingGoalAfterTime());
         }
 
+        /*
+         * Only update goal variables after animation time finishes
+         */
         private IEnumerator StopBuildingGoalAfterTime()
         {
             yield return new WaitForSeconds(_playerGoal.buildTime);
@@ -71,10 +77,10 @@ namespace Client.Commands.CommandPoints
             _buildingGoal = false;
             ChangeCommand();
             
-            foreach (Animation animation in buildAnimations)
+            foreach (Animation anim in buildAnimations)
             {
-                animation.gameObject.SetActive(false);
-                animation.Stop();
+                anim.gameObject.SetActive(false);
+                anim.Stop();
             }
 
             StoppedBuildingGoal?.Invoke();

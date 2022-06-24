@@ -13,6 +13,10 @@ namespace ScriptableObjects.Towers
         [SerializeField]
         private List<TowerType> towerTypes;
 
+        /*
+         * Look up tower prefab from tower type by matching up indexes
+         * Dictionary is not used due to difficulty in exposing to Unity Editor
+         */
         public GameObject GetTowerPrefabFromType(TowerType towerType)
         {
             var typeIndex = towerTypes.IndexOf(towerType);

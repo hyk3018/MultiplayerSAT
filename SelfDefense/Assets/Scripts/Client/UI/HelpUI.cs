@@ -1,9 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Client.UI
 {
+    /*
+     * Implements help panel with wrapping navigation
+     */
     public class HelpUI : MonoBehaviour
     {
         [SerializeField]

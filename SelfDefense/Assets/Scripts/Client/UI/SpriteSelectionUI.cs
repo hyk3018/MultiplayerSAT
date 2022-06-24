@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ScriptableObjects.Player;
 using UnityEngine;
 
 namespace Client.UI
